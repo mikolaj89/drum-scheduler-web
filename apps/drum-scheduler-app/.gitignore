@@ -1,0 +1,71 @@
+# Node modules and dependencies
+node_modules/
+.yarn/
+.pnp
+.pnp.js
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# IDE and Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.iml
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# React Native
+.metro-health-check-result
+.haste_cache/
+
+# Android build files
+android/build/
+android/app/build/
+android/.gradle/
+android/app/.cxx/
+local.properties
+
+# iOS build files
+ios/Pods/
+ios/Podfile.lock
+ios/build/
+DerivedData/
+xcshareddata/
+
+# Build outputs
+*.apk
+*.aab
+*.ipa
+*.jks
+*.keystore
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Cache and temp files
+.cache/
+.tmp/
+*.tmp
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Bundler
+.bundle/
+vendor/
+Gemfile.lock
