@@ -1,21 +1,18 @@
-# Ignorowanie plików konfiguracyjnych i zależności
 .env
 node_modules/
+dist/
 
-# Ignorowanie plików Drizzle ORM (mogą zawierać dane lokalne)
 drizzle/**/migrations/
+
 drizzle.config.ts
 
-# Pliki edytora i systemowe
 .vscode/
 .DS_Store
 Thumbs.db
 
-# Pliki i foldery bazy danych (jeśli używasz lokalnej instancji NeonDB)
 db/*.sqlite
 db/*.sqlite-journal
 
-# Pliki kompilacji i cache Deno
 deno.cache/
 
 .turbo

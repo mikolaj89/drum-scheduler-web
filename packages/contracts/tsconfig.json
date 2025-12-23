@@ -1,0 +1,22 @@
+{
+  
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+     "noEmit": true,
+     "allowImportingTsExtensions": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+   
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+
+    "strict": true,
+    "skipLibCheck": true
+  },
+   "build": "tsc -p tsconfig.json",
+  "include": ["src"]
+}

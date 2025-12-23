@@ -1,7 +1,12 @@
 {
-  "name": "api",
+  "name": "@drum-scheduler/api",
   "version": "1.0.0",
+  "type" : "module",
   "scripts": {
     "dev": "deno run dev"
+  },
+    "exports": {
+    "./db/schema": "./db/schema.ts",
+    "./db/types": "./db/types.ts"
   }
 }

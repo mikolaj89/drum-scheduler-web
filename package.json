@@ -10,9 +10,10 @@
     "test": "turbo run test"
   },
   "devDependencies": {
-    "turbo": "^1.13.4"
+    "turbo": "^1.13.4",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@drum/shared": "workspace:^"
+    "@drum-scheduler/contracts": "workspace:^"
   }
 }
