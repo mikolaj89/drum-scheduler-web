@@ -4,6 +4,8 @@
   },
   "nodeModulesDir": "auto",
   "imports": {
+    "@drum-scheduler/db-schema": "../../packages/db-schema/dist/index.js",
+    "@drum-scheduler/db-schema/": "../../packages/db-schema/dist/",
     "@luca/cases": "jsr:@luca/cases@^1.0.0",
     "@neondatabase/serverless": "npm:@neondatabase/serverless@^0.10.4",
     "@oak/oak": "jsr:@oak/oak@^17.1.4",

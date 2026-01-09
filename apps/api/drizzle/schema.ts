@@ -1,1 +1,1 @@
-export * from "@drum-scheduler/db-schema/schema";
+export * from "@drum-scheduler/db-schema/schema.js";
