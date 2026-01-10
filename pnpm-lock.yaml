@@ -115,6 +115,9 @@ importers:
       '@react-native/new-app-screen':
         specifier: 0.83.0
         version: 0.83.0(@types/react@19.2.7)(react-native@0.83.0(@babel/core@7.28.5)(@react-native-community/cli@20.0.0(typescript@5.9.3))(@react-native/metro-config@0.83.0(@babel/core@7.28.5))(@types/react@19.2.7)(react@19.2.0))(react@19.2.0)
+      '@tanstack/react-query':
+        specifier: ^5.66.10
+        version: 5.66.10(react@19.2.0)
       react:
         specifier: 19.2.0
         version: 19.2.0
