@@ -1,7 +1,4 @@
-// SessionsScreen.tsx (React Native, no UI library)
-// Assumes: react-native-vector-icons (MaterialIcons) OR replace icons with simple Text.
-
-import React, { useMemo, useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,35 +8,26 @@ import {
   TextInput,
   FlatList,
   ListRenderItemInfo,
-} from "react-native";
+  Platform,
+} from 'react-native';
 // If you don't want icons, remove these and replace <Icon .../> with <Text>...</Text>
-import Icon from "react-native-vector-icons/MaterialIcons";
-
-type Session = {
-  id: string;
-  title: string;
-  dateLabel: string; // e.g. "Today 18:30" or "2025-12-18"
-  durationMin: number;
-  exercisesCount: number;
-  isPinned?: boolean;
-  hasNotes?: boolean;
-  hasBpmMix?: boolean;
-  status: "upcoming" | "completed";
-};
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useSessionsQuery } from '@drum-scheduler/sdk';
+import { Session } from '@drum-scheduler/contracts';
 
 const theme = {
   colors: {
-    bg: "#F2F3F5",
-    surface: "#FFFFFF",
-    border: "#D6D9DE",
-    text: "#1F2430",
-    textMuted: "#6B7280",
-    icon: "#4B5563",
-    pillBg: "#E7E9ED",
-    pillText: "#374151",
-    primary: "#6B7280", // grayscale primary
-    primaryText: "#FFFFFF",
-    shadow: "rgba(0,0,0,0.12)",
+    bg: '#F2F3F5',
+    surface: '#FFFFFF',
+    border: '#D6D9DE',
+    text: '#1F2430',
+    textMuted: '#6B7280',
+    icon: '#4B5563',
+    pillBg: '#E7E9ED',
+    pillText: '#374151',
+    primary: '#6B7280', // grayscale primary
+    primaryText: '#FFFFFF',
+    shadow: 'rgba(0,0,0,0.12)',
   },
   radius: {
     xl: 18,
@@ -61,72 +49,24 @@ const theme = {
   },
 };
 
-const TABS = ["All", "Upcoming", "Completed"] as const;
+const TABS = ['All', 'Upcoming', 'Completed'] as const;
 type Tab = (typeof TABS)[number];
 
-const seedSessions: Session[] = [
-  {
-    id: "s1",
-    title: "Session name",
-    dateLabel: "Today 18:30",
-    durationMin: 45,
-    exercisesCount: 6,
-    isPinned: true,
-    status: "upcoming",
-  },
-  {
-    id: "s2",
-    title: "Session name",
-    dateLabel: "2025-12-18",
-    durationMin: 30,
-    exercisesCount: 4,
-    hasNotes: true,
-    hasBpmMix: true,
-    status: "upcoming",
-  },
-  {
-    id: "s3",
-    title: "Session name",
-    dateLabel: "2025-12-15",
-    durationMin: 55,
-    exercisesCount: 7,
-    status: "completed",
-  },
-];
-
 export default function SessionsScreen() {
-  const [tab, setTab] = useState<Tab>("All");
-  const [query, setQuery] = useState("");
+  const [tab, setTab] = useState<Tab>('All');
+  const [query, setQuery] = useState('');
 
-  const pinned = seedSessions.find((s) => s.isPinned);
-  const list = seedSessions.filter((s) => !s.isPinned);
+  const apiBaseUrl =
+    Platform.select({
+      android: 'http://10.0.2.2:8000',
+      ios: 'http://localhost:8000',
+      default: 'http://localhost:8000',
+    }) ?? 'http://localhost:8000';
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-
-    const byTab = (s: Session) => {
-      if (tab === "All") return true;
-      if (tab === "Upcoming") return s.status === "upcoming";
-      return s.status === "completed";
-    };
-
-    const byQuery = (s: Session) => {
-      if (!q) return true;
-      return (
-        s.title.toLowerCase().includes(q) ||
-        s.dateLabel.toLowerCase().includes(q)
-      );
-    };
-
-    return list.filter((s) => byTab(s) && byQuery(s));
-  }, [tab, query]);
+  const sessionsResult = useSessionsQuery({ baseUrl: apiBaseUrl });
 
   const renderItem = ({ item }: ListRenderItemInfo<Session>) => (
-    <SessionCard
-      session={item}
-      onStart={() => {}}
-      onMenu={() => {}}
-    />
+    <SessionCard session={item} onStart={() => {}} onMenu={() => {}} />
   );
 
   return (
@@ -138,23 +78,21 @@ export default function SessionsScreen() {
 
         <SegmentedTabs value={tab} onChange={setTab} />
 
+        {sessionsResult?.isLoading ? (
+          <Text style={styles.sectionTitle}>Loading sessions…</Text>
+        ) : sessionsResult?.error ? (
+          <Text style={styles.sectionTitle}>
+            {sessionsResult.error.message || 'Failed to load sessions'}
+          </Text>
+        ) : sessionsResult?.data?.length === 0 ? (
+          <Text style={styles.sectionTitle}>No sessions yet.</Text>
+        ) : null}
+
         <FlatList
-          data={filtered}
-          keyExtractor={(s) => s.id}
+          data={sessionsResult?.data ?? []}
+          keyExtractor={s => s.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.listContent}
-          ListHeaderComponent={
-            pinned ? (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Next / Pinned</Text>
-                <SessionCard
-                  session={pinned}
-                  onStart={() => {}}
-                  onMenu={() => {}}
-                />
-              </View>
-            ) : null
-          }
           ListFooterComponent={<View style={{ height: theme.spacing.xl }} />}
           showsVerticalScrollIndicator={false}
         />
@@ -224,7 +162,7 @@ function SegmentedTabs({
 }) {
   return (
     <View style={styles.tabsOuter}>
-      {TABS.map((t) => {
+      {TABS.map(t => {
         const active = t === value;
         return (
           <Pressable
@@ -253,20 +191,12 @@ function SessionCard({
 }) {
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>{session.title}</Text>
+      <Text style={styles.cardTitle}>{session.name}</Text>
       <View style={styles.divider} />
 
       <Text style={styles.cardMeta}>
-        {session.dateLabel} • {session.durationMin} min • {session.exercisesCount}{" "}
-        exercises
+        {session.createdAt} • {session.totalDuration} min •{' '}
       </Text>
-
-      {(session.hasNotes || session.hasBpmMix) && (
-        <View style={styles.pillsRow}>
-          {session.hasNotes && <Pill label="Notes" />}
-          {session.hasBpmMix && <Pill label="BPM Mix" />}
-        </View>
-      )}
 
       <View style={styles.cardActions}>
         <Pressable style={styles.startBtn} onPress={onStart}>
@@ -297,21 +227,21 @@ const styles = StyleSheet.create({
   topBar: {
     height: 56,
     paddingHorizontal: theme.spacing.lg,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   topBarTitle: {
     fontSize: theme.typography.title,
-    fontWeight: "700",
+    fontWeight: '700',
     color: theme.colors.text,
   },
   iconBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   searchWrap: {
@@ -323,8 +253,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: theme.spacing.sm,
   },
   searchInput: {
@@ -339,7 +269,7 @@ const styles = StyleSheet.create({
     padding: 4,
     backgroundColor: theme.colors.pillBg,
     borderRadius: 999,
-    flexDirection: "row",
+    flexDirection: 'row',
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
@@ -347,15 +277,15 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 38,
     borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tabBtnActive: {
     backgroundColor: theme.colors.primary,
   },
   tabText: {
     fontSize: theme.typography.body,
-    fontWeight: "600",
+    fontWeight: '600',
     color: theme.colors.pillText,
   },
   tabTextActive: {
@@ -370,7 +300,7 @@ const styles = StyleSheet.create({
   section: { gap: theme.spacing.md, marginBottom: theme.spacing.md },
   sectionTitle: {
     fontSize: theme.typography.body,
-    fontWeight: "600",
+    fontWeight: '600',
     color: theme.colors.textMuted,
   },
 
@@ -389,7 +319,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: theme.typography.cardTitle,
-    fontWeight: "800",
+    fontWeight: '800',
     color: theme.colors.text,
   },
   divider: {
@@ -400,10 +330,10 @@ const styles = StyleSheet.create({
   cardMeta: {
     fontSize: theme.typography.body,
     color: theme.colors.textMuted,
-    fontWeight: "500",
+    fontWeight: '500',
   },
 
-  pillsRow: { flexDirection: "row", gap: theme.spacing.sm },
+  pillsRow: { flexDirection: 'row', gap: theme.spacing.sm },
   pill: {
     backgroundColor: theme.colors.pillBg,
     borderRadius: 10,
@@ -415,18 +345,18 @@ const styles = StyleSheet.create({
   pillText: {
     color: theme.colors.pillText,
     fontSize: theme.typography.small,
-    fontWeight: "700",
+    fontWeight: '700',
   },
 
   cardActions: {
     marginTop: theme.spacing.sm,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   startBtn: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 16,
@@ -435,20 +365,20 @@ const styles = StyleSheet.create({
   },
   startText: {
     color: theme.colors.primaryText,
-    fontWeight: "800",
+    fontWeight: '800',
     fontSize: theme.typography.body,
   },
 
   ctaWrap: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     bottom: 18,
-    alignItems: "center",
+    alignItems: 'center',
   },
   ctaBtn: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 22,
@@ -463,6 +393,6 @@ const styles = StyleSheet.create({
   ctaText: {
     color: theme.colors.primaryText,
     fontSize: theme.typography.body,
-    fontWeight: "800",
+    fontWeight: '800',
   },
 });
