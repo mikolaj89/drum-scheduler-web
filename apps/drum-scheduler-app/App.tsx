@@ -7,6 +7,7 @@ import SessionScreen from './components/session/session-screen/session-screen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { API_BASE_URL } from './config/api';
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,7 @@ function App() {
 }
 
 function AppContent() {
-  const baseUrl = 'http://10.0.2.2:8000';
+  const baseUrl = API_BASE_URL;
 
   return (
     <View style={styles.container}>

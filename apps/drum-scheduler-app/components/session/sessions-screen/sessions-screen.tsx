@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSessionsQuery } from '@drum-scheduler/sdk';
 import { Session } from '@drum-scheduler/contracts';
 import { SessionCard } from '../session-card/session-card';
+import { API_BASE_URL } from '../../../config/api';
 
 const theme = {
   colors: {
@@ -60,7 +61,7 @@ export default function SessionsScreen({
   const [tab, setTab] = useState<Tab>('All');
   const [query, setQuery] = useState('');
 
-  const sessionsResult = useSessionsQuery('http://10.0.2.2:8000');
+  const sessionsResult = useSessionsQuery(API_BASE_URL);
 
   const renderItem = ({ item }: ListRenderItemInfo<Session>) => (
     <SessionCard

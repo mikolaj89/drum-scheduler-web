@@ -9,21 +9,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useQuery } from '@tanstack/react-query';
-import type { Exercise, Session } from '@drum-scheduler/contracts';
-
-type SessionWithExercises = Session & {
-  totalDuration: number;
-  exercises: Exercise[];
-};
-
-type ApiErrorResponse = {
-  error: { message: string; errorCode: string; fieldErrors?: Record<string, string> };
-};
-
-type ApiSuccessResponse<T> = { data: T; success?: boolean };
-
-type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+import type { Exercise } from '@drum-scheduler/contracts';
+import { useSessionQuery } from '@drum-scheduler/sdk';
 
 const theme = {
   colors: {
@@ -59,24 +46,6 @@ const theme = {
   },
 };
 
-async function fetchSessionById(baseUrl: string, sessionId: number): Promise<SessionWithExercises> {
-  const response = await fetch(`${baseUrl}/sessions/${sessionId}`);
-  const json = (await response.json()) as ApiResponse<SessionWithExercises>;
-
-  if (!response.ok) {
-    if ('error' in json) {
-      throw new Error(json.error.message);
-    }
-    throw new Error('Failed to load session');
-  }
-
-  if ('error' in json) {
-    throw new Error(json.error.message);
-  }
-
-  return json.data;
-}
-
 export default function SessionScreen({
   baseUrl,
   sessionId,
@@ -86,10 +55,7 @@ export default function SessionScreen({
   sessionId: number;
   onBack: () => void;
 }) {
-  const sessionResult = useQuery({
-    queryKey: ['session', sessionId],
-    queryFn: () => fetchSessionById(baseUrl, sessionId),
-  });
+  const sessionResult = useSessionQuery(baseUrl, sessionId);
 
   const renderItem = ({ item }: ListRenderItemInfo<Exercise>) => {
     const duration = item.durationMinutes ?? 0;
