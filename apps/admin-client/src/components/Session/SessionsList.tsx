@@ -1,5 +1,5 @@
 "use client";
-import { deleteSession, fetchSessions } from "@/utils/sessions-api";
+import { deleteSession } from "@/utils/sessions-api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -12,9 +12,10 @@ import {
   Button,
 } from "@mui/material";
 import { TableLink } from "../Common/Link";
-import { Session } from "../../../../api/db/types";
 import { ConfirmationDialog } from "../Common/ConfirmationDialog";
 import { useState } from "react";
+import { fetchSessions } from "@drum-scheduler/sdk";
+import { Session } from "@drum-scheduler/contracts";
 
 export const SessionsList = ({ sessionsData }: { sessionsData: Session[] }) => {
   const queryClient = useQueryClient();
@@ -22,12 +23,12 @@ export const SessionsList = ({ sessionsData }: { sessionsData: Session[] }) => {
   const [sessionIdToDelete, setSessionIdToDelete] = useState<number | null>(
     null
   );
-  const { data } = useQuery({
+  const result = useQuery({
     queryKey: ["sessions"],
     queryFn: fetchSessions,
-    initialData: { data: sessionsData },
+    initialData: sessionsData,
     refetchOnMount: false,
-  }).data;
+  });
 
   const deleteMutation = useMutation({
     mutationKey: ["deleteSession"],
@@ -71,7 +72,7 @@ export const SessionsList = ({ sessionsData }: { sessionsData: Session[] }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.map((row) => (
+            {result.data?.map((row) => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
