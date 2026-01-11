@@ -8,12 +8,12 @@ import {
   TextInput,
   FlatList,
   ListRenderItemInfo,
-  Platform,
 } from 'react-native';
 // If you don't want icons, remove these and replace <Icon .../> with <Text>...</Text>
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSessionsQuery } from '@drum-scheduler/sdk';
 import { Session } from '@drum-scheduler/contracts';
+import { SessionCard } from './session-card';
 
 const theme = {
   colors: {
@@ -59,7 +59,12 @@ export default function SessionsScreen() {
   const sessionsResult = useSessionsQuery('http://10.0.2.2:8000');
 
   const renderItem = ({ item }: ListRenderItemInfo<Session>) => (
-    <SessionCard session={item} onStart={() => {}} onMenu={() => {}} />
+    <SessionCard
+      session={item}
+      onOpen={() => {}}
+      onStart={() => {}}
+      onMenu={() => {}}
+    />
   );
 
   return (
@@ -173,38 +178,6 @@ function SegmentedTabs({
   );
 }
 
-function SessionCard({
-  session,
-  onStart,
-  onMenu,
-}: {
-  session: Session;
-  onStart: () => void;
-  onMenu: () => void;
-}) {
-  return (
-    <View style={styles.card}>
-      <Text style={styles.cardTitle}>{session.name}</Text>
-      <View style={styles.divider} />
-
-      <Text style={styles.cardMeta}>
-        Total duration: {session.totalDuration}
-      </Text>
-
-      <View style={styles.cardActions}>
-        <Pressable style={styles.startBtn} onPress={onStart}>
-          <Text style={styles.startText}>Start</Text>
-          <Icon name="play-arrow" size={20} color={theme.colors.primaryText} />
-        </Pressable>
-
-        <Pressable style={styles.iconBtn} onPress={onMenu}>
-          <Icon name="more-vert" size={22} color={theme.colors.icon} />
-        </Pressable>
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.colors.bg },
   screen: { flex: 1, backgroundColor: theme.colors.bg },
@@ -287,71 +260,6 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.body,
     fontWeight: '600',
     color: theme.colors.textMuted,
-  },
-
-  card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    padding: theme.spacing.lg,
-    gap: theme.spacing.sm,
-    shadowColor: theme.colors.shadow,
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 2,
-  },
-  cardTitle: {
-    fontSize: theme.typography.cardTitle,
-    fontWeight: '800',
-    color: theme.colors.text,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: theme.colors.border,
-    opacity: 0.9,
-  },
-  cardMeta: {
-    fontSize: theme.typography.body,
-    color: theme.colors.textMuted,
-    fontWeight: '500',
-  },
-
-  pillsRow: { flexDirection: 'row', gap: theme.spacing.sm },
-  pill: {
-    backgroundColor: theme.colors.pillBg,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  pillText: {
-    color: theme.colors.pillText,
-    fontSize: theme.typography.small,
-    fontWeight: '700',
-  },
-
-  cardActions: {
-    marginTop: theme.spacing.sm,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  startBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: theme.colors.primary,
-    paddingHorizontal: 16,
-    height: 42,
-    borderRadius: 12,
-  },
-  startText: {
-    color: theme.colors.primaryText,
-    fontWeight: '800',
-    fontSize: theme.typography.body,
   },
 
   ctaWrap: {
