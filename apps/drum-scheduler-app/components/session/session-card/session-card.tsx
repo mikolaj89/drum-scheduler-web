@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Session } from '@drum-scheduler/contracts';
-import { getFormattedMinutes, getLastFinishedDateFormatted } from './session-utils';
+import { getFormattedMinutes, getLastFinishedDateFormatted } from '../session-utils';
 
 const theme = {
   colors: {
@@ -40,8 +40,8 @@ const theme = {
 export function SessionCard({
   session,
   onOpen,
-  onStart,
-  onMenu,
+  onStart: _onStart,
+  onMenu: _onMenu,
 }: {
   session: Session;
   onOpen: () => void;

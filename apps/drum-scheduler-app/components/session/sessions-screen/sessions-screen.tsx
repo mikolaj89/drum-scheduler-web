@@ -13,7 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSessionsQuery } from '@drum-scheduler/sdk';
 import { Session } from '@drum-scheduler/contracts';
-import { SessionCard } from './session-card';
+import { SessionCard } from '../session-card/session-card';
 
 const theme = {
   colors: {
@@ -52,7 +52,11 @@ const theme = {
 const TABS = ['All', 'Upcoming', 'Completed'] as const;
 type Tab = (typeof TABS)[number];
 
-export default function SessionsScreen() {
+export default function SessionsScreen({
+  onOpenSession,
+}: {
+  onOpenSession?: (sessionId: number) => void;
+}) {
   const [tab, setTab] = useState<Tab>('All');
   const [query, setQuery] = useState('');
 
@@ -61,7 +65,7 @@ export default function SessionsScreen() {
   const renderItem = ({ item }: ListRenderItemInfo<Session>) => (
     <SessionCard
       session={item}
-      onOpen={() => {}}
+      onOpen={() => onOpenSession?.(item.id)}
       onStart={() => {}}
       onMenu={() => {}}
     />
