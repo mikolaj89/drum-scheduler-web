@@ -21,7 +21,7 @@ import {
 
 import DraggableGridRow from "./DraggableRow";
 import { getSessionExercisesColumns } from "./ExercisesTableHelper";
-import { Exercise } from "../../../../../api/db/types";
+import type { Exercise } from "@drum-scheduler/contracts";
 
 type ExercisesTableProps = {
   rows: Exercise[];

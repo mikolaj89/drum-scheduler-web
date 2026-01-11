@@ -18,6 +18,7 @@ import { fetchSessions } from "@drum-scheduler/sdk";
 import { Session } from "@drum-scheduler/contracts";
 
 export const SessionsList = ({ sessionsData }: { sessionsData: Session[] }) => {
+  const API_BASE_URL = "http://localhost:8000";
   const queryClient = useQueryClient();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [sessionIdToDelete, setSessionIdToDelete] = useState<number | null>(
@@ -25,7 +26,7 @@ export const SessionsList = ({ sessionsData }: { sessionsData: Session[] }) => {
   );
   const result = useQuery({
     queryKey: ["sessions"],
-    queryFn: fetchSessions,
+    queryFn: async () => (await fetchSessions(API_BASE_URL)) ?? [],
     initialData: sessionsData,
     refetchOnMount: false,
   });

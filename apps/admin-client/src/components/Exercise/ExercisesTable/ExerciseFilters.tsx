@@ -3,7 +3,7 @@ import { SelectField } from "@/components/Common/Field/Select";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import { getCategoryOpts } from "../ExerciseForm/exercise-form-helper";
-import { Category } from "../../../../../api/db/types";
+import type { Category } from "@drum-scheduler/contracts";
 import {
     Card,
     CardContent,

@@ -1,6 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
-import { Exercise } from "../../../../../api/db/types";
+import type { Exercise } from "@drum-scheduler/contracts";
 
 type ExercisesColumns = {
   onDelete: (id: number) => void;

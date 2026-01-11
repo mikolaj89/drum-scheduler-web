@@ -1,10 +1,17 @@
-import { SessionWithExercises } from "../../../api/utils/session";
 import { fetchData } from "./request";
 import { ApiClient as ApiClientV2 } from "../utils/api-client-v2";
-import { Session } from "../../../api/db/types";
-import { SessionExercisesOrderInput } from "../../../api/api-types";
-import { CreateSessionResponse } from "../../../api/routes/sessions/createSession";
+import type { Exercise, Session } from "@drum-scheduler/contracts";
 import { SessionFormData } from "@/components/Session/SessionForm/session-form-helper";
+
+export type CreateSessionResponse = { id: number };
+export type SessionExercisesOrderInput = {
+  exercises: Exercise[];
+};
+
+export type SessionWithExercises = Session & {
+  totalDuration: number;
+  exercises: Exercise[];
+};
 
 export const fetchSession = async (id: string) =>
   await fetchData<SessionWithExercises>(`/sessions/${id}`);

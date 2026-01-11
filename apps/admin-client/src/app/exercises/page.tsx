@@ -8,27 +8,24 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { CreateExercise } from "@/components/Exercise/CreateExercise";
-import { Category, Exercise } from "../../../../api/db/types";
+import type { Category, Exercise } from "@drum-scheduler/contracts";
 import { ExerciseFilters } from "@/components/Exercise/ExercisesTable/ExerciseFilters";
 import {
-  ButtonsWrapper,
   TableButtonsWrapper,
 } from "@/components/Common/Container";
 
 type PageProps = {
-  params: { slug: string };
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+};
 
-export default async function ExercisesPage({searchParams} : PageProps) {
+export default async function ExercisesPage({ searchParams }: PageProps) {
   // Step 1: Create a new query client
   const queryClient = new QueryClient();
   let categories: Category[] = [];
 
-  let {name, categoryId} = (await searchParams) || {};
+  let { name, categoryId } = (await searchParams) || {};
   name = Array.isArray(name) ? name[0] : name ?? "";
   categoryId = Array.isArray(categoryId) ? categoryId[0] : categoryId ?? "";
-  console.log({name, categoryId});
   // if(searchParams) {
   //   name = (await searchParams)["name"]?.toString() || "";
   //   categoryId =  ( await searchParams)["categoryId"]?.toString() || "";
@@ -50,7 +47,7 @@ export default async function ExercisesPage({searchParams} : PageProps) {
   const { data } =
     queryClient.getQueryData<ResponseData<Exercise[]>>(["exercises"]) ?? {};
   if (data === null) {
-    return <div>Error: couldn't fetch exercises data</div>;
+    return <div>{"Error: couldn't fetch exercises data"}</div>;
   }
   return (
     <>

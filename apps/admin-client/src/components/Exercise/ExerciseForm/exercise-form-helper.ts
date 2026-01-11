@@ -1,5 +1,5 @@
 import { SelectOption } from "@/components/Common/Field/Select";
-import {Category, Exercise} from "../../../../../api/db/types";
+import type { Category, Exercise } from "@drum-scheduler/contracts";
 import { z } from "zod";
 import { fetchExercise } from "@/utils/exercises-api";
 import { useQuery } from "@tanstack/react-query";

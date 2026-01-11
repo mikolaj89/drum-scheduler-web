@@ -1,5 +1,5 @@
-{
-    "rules": {
-      "@typescript-eslint/no-explicit-any": "error"
-    }
-  }
+export default {
+  rules: {
+    "@typescript-eslint/no-explicit-any": "error",
+  },
+};

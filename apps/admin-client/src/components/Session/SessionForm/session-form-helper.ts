@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { requireStr } from "@/utils/validation";
-import { Session } from "../../../../../api/db/types";
+import type { Session } from "@drum-scheduler/contracts";
 const MIN_NAME_LENGTH = 5;
 
 export const sessionSchema = z.object({

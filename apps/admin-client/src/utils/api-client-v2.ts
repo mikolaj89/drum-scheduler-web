@@ -1,6 +1,4 @@
-import {
-  ApiResponse
-} from "../../../api/utils/response";
+import type { ApiResponse } from "@drum-scheduler/contracts";
 
 export class ApiClient {
   private baseUrl: string;

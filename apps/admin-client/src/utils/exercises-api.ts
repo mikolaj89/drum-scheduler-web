@@ -1,5 +1,5 @@
 import { fetchData } from "./request";
-import { Category, Exercise } from "../../../api/db/types";
+import type { Category, Exercise } from "@drum-scheduler/contracts";
 import { ExerciseSubmitData } from "@/components/Exercise/ExerciseForm/exercise-form-helper";
 import { ApiClient } from "./api-client";
 import { ApiClient as ApiClientV2 } from "./api-client-v2";

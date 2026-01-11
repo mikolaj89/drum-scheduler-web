@@ -6,14 +6,14 @@ import {
 } from "@/utils/sessions-api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Paper } from "@mui/material";
-import { SessionWithExercises } from "../../../../api/utils/session";
+import type { SessionWithExercises } from "@/utils/sessions-api";
 import ExercisesTable from "../Exercise/ExercisesTable/SessionExercisesTable";
 import { useCallback, useEffect, useState } from "react";
 import { getSessionExercisesColumns } from "../Exercise/ExercisesTable/ExercisesTableHelper";
 import AddIcon from "@mui/icons-material/Add";
 import Divider from "@mui/material/Divider";
 import { SelectExerciseModal } from "./AddExerciseToSessionModal/AddExerciseToSessionModal";
-import { Exercise } from "../../../../api/db/types";
+import type { Exercise } from "@drum-scheduler/contracts";
 import { ButtonsWrapper, TableButtonsWrapper } from "../Common/Container";
 
 export const SessionDetails = ({
@@ -75,7 +75,7 @@ export const SessionDetails = ({
     },
   });
 
-  const [rows, setRows] = useState(data?.exercises ?? []);
+  const [rows, setRows] = useState<Exercise[]>(data?.exercises ?? []);
   const handleChangeRows = useCallback(
     (rows: Exercise[]) => {
       setRows(rows);
