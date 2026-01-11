@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type" : "module",
   "scripts": {
-    "dev": "pnpm -C ../../packages/db-schema build && deno task dev"
+    "dev": "pnpm -C ../../packages/db-schema build && deno task dev",
+    "db:pull": "deno --env -A --node-modules-dir npm:drizzle-kit@0.30.2 pull"
   },
   "exports": {
     "./db/schema": "./db/schema.ts",

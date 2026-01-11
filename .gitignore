@@ -4,7 +4,6 @@ dist/
 
 drizzle/**/migrations/
 
-drizzle.config.ts
 
 .vscode/
 .DS_Store
