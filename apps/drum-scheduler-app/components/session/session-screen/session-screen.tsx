@@ -22,7 +22,7 @@ const theme = {
     icon: '#4B5563',
     pillBg: '#E7E9ED',
     pillText: '#374151',
-    primary: '#6B7280',
+    primary: '#3B82F6',
     primaryText: '#FFFFFF',
     shadow: 'rgba(0,0,0,0.12)',
   },
@@ -50,10 +50,12 @@ export default function SessionScreen({
   baseUrl,
   sessionId,
   onBack,
+  onStart,
 }: {
   baseUrl: string;
   sessionId: number;
   onBack: () => void;
+  onStart?: (exercise: Exercise, sessionName: string) => void;
 }) {
   const sessionResult = useSessionQuery(baseUrl, sessionId);
 
@@ -100,11 +102,29 @@ export default function SessionScreen({
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             !sessionResult.isLoading && !sessionResult.error ? (
-              <Text style={styles.emptyText}>No exercises in this session.</Text>
+              <Text style={styles.emptyText}>
+                No exercises in this session.
+              </Text>
             ) : null
           }
           showsVerticalScrollIndicator={false}
         />
+
+        <View style={styles.ctaWrap}>
+          <Pressable
+            style={styles.ctaBtn}
+            onPress={() => {
+              const firstExercise = sessionResult.data?.exercises?.[0];
+              const sessionName = sessionResult.data?.name;
+              if (firstExercise && sessionName && onStart) {
+                onStart(firstExercise, sessionName);
+              }
+            }}
+            disabled={!sessionResult.data?.exercises?.[0]}
+          >
+            <Text style={styles.ctaText}>Start</Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -184,7 +204,7 @@ const styles = StyleSheet.create({
 
   listContent: {
     paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.xl,
+    paddingBottom: 110,
   },
 
   exerciseCard: {
@@ -212,5 +232,32 @@ const styles = StyleSheet.create({
     paddingTop: theme.spacing.md,
     fontSize: theme.typography.body,
     color: theme.colors.textMuted,
+  },
+
+  ctaWrap: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 18,
+    alignItems: 'center',
+  },
+  ctaBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 22,
+    height: 48,
+    borderRadius: 999,
+    minWidth: 220,
+    shadowColor: theme.colors.shadow,
+    shadowOpacity: 1,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 3,
+  },
+  ctaText: {
+    color: theme.colors.primaryText,
+    fontSize: theme.typography.cardTitle,
+    fontWeight: '800',
   },
 });
