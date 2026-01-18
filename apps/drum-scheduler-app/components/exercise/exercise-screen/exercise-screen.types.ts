@@ -1,0 +1,1 @@
+export type ExerciseState = 'preview' | 'active' | 'paused';

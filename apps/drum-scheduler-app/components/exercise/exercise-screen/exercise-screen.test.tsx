@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
-import ExerciseScreen from '../exercise-screen';
+import { fireEvent, render } from '@testing-library/react-native';
+import ExerciseScreen from './exercise-screen';
 import type { Exercise } from '@drum-scheduler/contracts';
 
 const exerciseFixture: Exercise = {
@@ -32,5 +32,22 @@ describe('ExerciseScreen', () => {
     expect(getByText('5 min')).toBeTruthy();
     expect(getByText('120')).toBeTruthy();
     expect(getByText('Exercise 2 / 10')).toBeTruthy();
+  });
+
+  it('shows timer after pressing play', () => {
+    const { getByLabelText, getByText } = render(
+      <ExerciseScreen
+        exercise={exerciseFixture}
+        sessionName="Session 2026"
+        exerciseIndex={2}
+        totalExercises={10}
+        onBack={() => {}}
+      />
+    );
+
+    fireEvent.press(getByLabelText('Play'));
+
+    expect(getByText('BPM 120')).toBeTruthy();
+    expect(getByText(/0[4-5]:\d{2}/)).toBeTruthy(); // regex check for proper timer format, (eg. 04:59), so it will work even when values change due to countdown
   });
 });

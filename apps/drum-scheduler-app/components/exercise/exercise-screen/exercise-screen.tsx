@@ -1,13 +1,10 @@
 import React from 'react';
-import {
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import type { Exercise } from '@drum-scheduler/contracts';
+import { useExercise } from '../../../hooks/use-exercise';
+import ActiveExerciseView from './active-exercise-view';
 
 const theme = {
   colors: {
@@ -57,42 +54,61 @@ export default function ExerciseScreen({
   const duration = exercise.durationMinutes ?? 0;
   const bpm = exercise.bpm ?? 0;
   const notes = exercise.description?.trim() || '—';
+  const { startExercise, pauseExercise, finishExercise, mode, timeFormatted } =
+    useExercise(duration);
+
+  const isPauseDisabled = mode !== 'active';
+  const isPlayDisabled = mode === 'active';
+  const isPrevNextDisabled = mode !== 'preview';
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.screen}>
         <TopBar title="Exercise" onBack={onBack} />
 
-        <View style={styles.header}>
-          <Text style={styles.sessionName}>{sessionName}</Text>
-          <View style={styles.titleRow}>
-            <Text style={styles.exerciseTitle}>{exercise.name}</Text>
-            <Text style={styles.exerciseProgress}>
-              Exercise {exerciseIndex} / {totalExercises}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Notes</Text>
-          <Text style={styles.cardValue}>{notes}</Text>
-
-          <View style={styles.row}>
-            <View style={styles.kv}>
-              <Text style={styles.kLabel}>Duration</Text>
-              <Text style={styles.kValue}>{duration} min</Text>
+        {mode === 'active' || mode === 'paused' ? (
+          <ActiveExerciseView
+            name={exercise.name}
+            bpm={bpm}
+            timeFormatted={timeFormatted}
+          />
+        ) : (
+          <>
+            <View style={styles.header}>
+              <Text style={styles.sessionName}>{sessionName}</Text>
+              <View style={styles.titleRow}>
+                <Text style={styles.exerciseTitle}>{exercise.name}</Text>
+                <Text style={styles.exerciseProgress}>
+                  Exercise {exerciseIndex} / {totalExercises}
+                </Text>
+              </View>
             </View>
-            <View style={styles.kv}>
-              <Text style={styles.kLabel}>BPM</Text>
-              <Text style={styles.kValue}>{bpm}</Text>
+
+            <View style={styles.card}>
+              <Text style={styles.cardLabel}>Notes</Text>
+              <Text style={styles.cardValue}>{notes}</Text>
+
+              <View style={styles.row}>
+                <View style={styles.kv}>
+                  <Text style={styles.kLabel}>Duration</Text>
+                  <Text style={styles.kValue}>{duration} min</Text>
+                </View>
+                <View style={styles.kv}>
+                  <Text style={styles.kLabel}>BPM</Text>
+                  <Text style={styles.kValue}>{bpm}</Text>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
+          </>
+        )}
 
         <View style={styles.controlsWrap}>
           <View style={styles.controlsBar}>
             <Pressable
-              style={styles.controlBtn}
+              style={[
+                styles.controlBtn,
+                isPrevNextDisabled && styles.controlBtnDisabled,
+              ]}
               onPress={() => {}}
               accessibilityLabel="Previous"
             >
@@ -104,27 +120,53 @@ export default function ExerciseScreen({
             </Pressable>
 
             <Pressable
-              style={styles.controlBtn}
-              onPress={() => {}}
+              style={[
+                styles.controlBtn,
+                isPlayDisabled && styles.controlBtnDisabled,
+              ]}
+              onPress={() => startExercise()}
               accessibilityLabel="Play"
+              disabled={isPlayDisabled}
             >
-              <Icon name="play-arrow" size={26} color={theme.colors.primaryText} />
+              <Icon
+                name="play-arrow"
+                size={26}
+                color={theme.colors.primaryText}
+              />
             </Pressable>
 
             <Pressable
-              style={styles.controlBtn}
-              onPress={() => {}}
+              style={[
+                styles.controlBtn,
+                isPauseDisabled && styles.controlBtnDisabled,
+              ]}
+              onPress={() => pauseExercise()}
               accessibilityLabel="Pause"
+              disabled={isPauseDisabled}
             >
               <Icon name="pause" size={26} color={theme.colors.primaryText} />
             </Pressable>
-
             <Pressable
               style={styles.controlBtn}
+              onPress={() => finishExercise()}
+              accessibilityLabel="Finish"
+            >
+              <Icon name="stop" size={26} color={theme.colors.primaryText} />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.controlBtn,
+                isPrevNextDisabled && styles.controlBtnDisabled,
+              ]}
               onPress={() => {}}
               accessibilityLabel="Next"
+              disabled={isPrevNextDisabled}
             >
-              <Icon name="skip-next" size={26} color={theme.colors.primaryText} />
+              <Icon
+                name="skip-next"
+                size={26}
+                color={theme.colors.primaryText}
+              />
             </Pressable>
           </View>
         </View>
@@ -275,5 +317,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.primary,
+  },
+  controlBtnDisabled: {
+    opacity: 0.45,
   },
 });
