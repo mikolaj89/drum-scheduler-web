@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -51,12 +50,11 @@ function AppContent() {
                 baseUrl={baseUrl}
                 sessionId={route.params.sessionId}
                 onBack={() => navigation.goBack()}
-                onStart={(exercise, sessionName, exerciseIndex, totalExercises) =>
+                onStart={(exercises, sessionName, exerciseIndex) =>
                   navigation.navigate('Exercise', {
-                    exercise,
+                    exercises,
                     sessionName,
                     exerciseIndex,
-                    totalExercises,
                   })
                 }
               />
@@ -66,10 +64,9 @@ function AppContent() {
           <Stack.Screen name="Exercise">
             {({ navigation, route }) => (
               <ExerciseScreen
-                exercise={route.params.exercise}
+                exercises={route.params.exercises}
                 sessionName={route.params.sessionName}
                 exerciseIndex={route.params.exerciseIndex}
-                totalExercises={route.params.totalExercises}
                 onBack={() => navigation.goBack()}
               />
             )}

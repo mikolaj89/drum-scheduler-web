@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { styles, theme } from './exercise-controls.style';
 
@@ -27,18 +27,15 @@ export default function ExerciseControls({
       <View style={styles.controlsBar}>
         <Pressable
           style={[
-            styles.controlBtn,
+            styles.controlBtnSecondary,
             isPrevNextDisabled && styles.controlBtnDisabled,
           ]}
           onPress={onPrev}
           accessibilityLabel="Previous"
           disabled={isPrevNextDisabled}
         >
-          <Icon
-            name="skip-previous"
-            size={26}
-            color={theme.colors.primaryText}
-          />
+          <Icon name="chevron-left" size={22} color={theme.colors.secondaryText} style={styles.controlBtnSecondaryIconLeft} />
+          <Text style={styles.controlBtnSecondaryText}>PREV</Text>
         </Pressable>
 
         <Pressable
@@ -75,14 +72,15 @@ export default function ExerciseControls({
 
         <Pressable
           style={[
-            styles.controlBtn,
+            styles.controlBtnSecondary,
             isPrevNextDisabled && styles.controlBtnDisabled,
           ]}
           onPress={onNext}
           accessibilityLabel="Next"
           disabled={isPrevNextDisabled}
         >
-          <Icon name="skip-next" size={26} color={theme.colors.primaryText} />
+          <Text style={styles.controlBtnSecondaryText}>NEXT</Text>
+          <Icon name="chevron-right" size={22} color={theme.colors.secondaryText} style={styles.controlBtnSecondaryIconRight} />
         </Pressable>
       </View>
     </View>

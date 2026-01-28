@@ -4,7 +4,7 @@ import ExerciseScreen from './exercise-screen';
 import type { Exercise } from '@drum-scheduler/contracts';
 
 const exerciseFixture: Exercise = {
-  id: 1,
+  id: 2,
   name: 'Paradiddle',
   categoryId: null,
   description: 'RLRR LRLL',
@@ -14,14 +14,24 @@ const exerciseFixture: Exercise = {
   createdAt: '2026-01-01T00:00:00.000Z',
 };
 
+const exercisesFixture: Exercise[] = Array.from({ length: 10 }, (_, i) => {
+  const id = i + 1;
+  if (id === 2) return exerciseFixture;
+  return {
+    ...exerciseFixture,
+    id,
+    name: `Exercise ${id}`,
+    description: `Desc ${id}`,
+  };
+});
+
 describe('ExerciseScreen', () => {
   it('renders exercise details and progress', () => {
     const { getByText } = render(
       <ExerciseScreen
-        exercise={exerciseFixture}
+        exercises={exercisesFixture}
         sessionName="Session 2026"
         exerciseIndex={2}
-        totalExercises={10}
         onBack={() => {}}
       />
     );
@@ -37,10 +47,9 @@ describe('ExerciseScreen', () => {
   it('shows timer after pressing play', () => {
     const { getByLabelText, getByText } = render(
       <ExerciseScreen
-        exercise={exerciseFixture}
+        exercises={exercisesFixture}
         sessionName="Session 2026"
         exerciseIndex={2}
-        totalExercises={10}
         onBack={() => {}}
       />
     );

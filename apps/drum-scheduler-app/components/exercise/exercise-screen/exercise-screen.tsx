@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -7,23 +7,30 @@ import { useExercise } from '../../../hooks/use-exercise';
 import ActiveExerciseView from '../active-exercise-view/active-exercise-view';
 import ExerciseControls from '../exercise-controls/exercise-controls';
 import { styles, theme } from './exercise-screen.style';
-
 export default function ExerciseScreen({
-  exercise,
+  exercises,
   sessionName,
   exerciseIndex,
-  totalExercises,
   onBack,
 }: {
-  exercise: Exercise;
+  exercises: Exercise[];
   sessionName: string;
   exerciseIndex: number;
-  totalExercises: number;
   onBack: () => void;
 }) {
-  const duration = exercise.durationMinutes ?? 0;
-  const bpm = exercise.bpm ?? 0;
-  const notes = exercise.description?.trim() || '—';
+  const [currentIndex, setCurrentIndex] = useState(exerciseIndex);
+  const totalExercises = exercises.length;
+
+  useEffect(() => {
+    if (totalExercises === 0) return;
+    if (currentIndex < 1) setCurrentIndex(1);
+    if (currentIndex > totalExercises) setCurrentIndex(totalExercises);
+  }, [currentIndex, totalExercises]);
+
+  const currentExercise = exercises[currentIndex - 1];
+  const duration = currentExercise?.durationMinutes ?? 0;
+  const bpm = currentExercise?.bpm ?? 0;
+  const notes = currentExercise?.description?.trim() || '—';
   const {
     startExercise,
     pauseExercise,
@@ -33,7 +40,19 @@ export default function ExerciseScreen({
     isPauseDisabled,
     isPlayDisabled,
     isPrevNextDisabled,
-  } = useExercise(duration);
+  } = useExercise({ exercises: exercises, exerciseIndex });
+
+  const handlePrev = () => {
+    if (isPrevNextDisabled) return;
+    setCurrentIndex(prev => Math.max(1, prev - 1));
+  };
+
+  const handleNext = () => {
+    if (isPrevNextDisabled) return;
+    setCurrentIndex(prev => Math.min(totalExercises, prev + 1));
+  };
+
+  
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -42,7 +61,7 @@ export default function ExerciseScreen({
 
         {mode === 'active' || mode === 'paused' ? (
           <ActiveExerciseView
-            name={exercise.name}
+            name={currentExercise?.name ?? ''}
             bpm={bpm}
             timeFormatted={timeFormatted}
           />
@@ -51,9 +70,11 @@ export default function ExerciseScreen({
             <View style={styles.header}>
               <Text style={styles.sessionName}>{sessionName}</Text>
               <View style={styles.titleRow}>
-                <Text style={styles.exerciseTitle}>{exercise.name}</Text>
+                <Text style={styles.exerciseTitle}>
+                  {currentExercise?.name ?? ''}
+                </Text>
                 <Text style={styles.exerciseProgress}>
-                  Exercise {exerciseIndex} / {totalExercises}
+                  Exercise {currentIndex} / {totalExercises}
                 </Text>
               </View>
             </View>
@@ -80,17 +101,12 @@ export default function ExerciseScreen({
           isPrevNextDisabled={isPrevNextDisabled}
           isPlayDisabled={isPlayDisabled}
           isPauseDisabled={isPauseDisabled}
-          onPrev={() => {}}
-          onPlay={() => {
-            startExercise();
-          }}
-          onPause={() => {
-            pauseExercise();
-          }}
-          onFinish={() => {
-            finishExercise();
-          }}
-          onNext={() => {}}
+          onPrev={handlePrev}
+          onPlay={startExercise}
+          onPause={pauseExercise}
+          onFinish={finishExercise}
+
+          onNext={handleNext}
         />
       </View>
     </SafeAreaView>

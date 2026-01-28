@@ -19,14 +19,14 @@ describe('useExercise', () => {
   });
 
   it('starts in preview mode and formats time', () => {
-    const { result } = renderHook(() => useExercise(5));
+    const { result } = renderHook(() => useExercise({ duration: 5 }));
 
     expect(result.current.mode).toBe('preview');
     expect(result.current.timeFormatted).toBe('05:00');
   });
 
   it('switches to active on start', () => {
-    const { result } = renderHook(() => useExercise(5));
+    const { result } = renderHook(() => useExercise({ duration: 5 }));
 
     act(() => {
       result.current.startExercise();
@@ -36,7 +36,7 @@ describe('useExercise', () => {
   });
 
   it('switches to paused on pause', () => {
-    const { result } = renderHook(() => useExercise(5));
+    const { result } = renderHook(() => useExercise({ duration: 5 }));
 
     act(() => {
       result.current.pauseExercise();
@@ -46,7 +46,7 @@ describe('useExercise', () => {
   });
 
   it('returns to preview on finish', () => {
-    const { result } = renderHook(() => useExercise(5));
+    const { result } = renderHook(() => useExercise({ duration: 5 }));
 
     act(() => {
       result.current.startExercise();

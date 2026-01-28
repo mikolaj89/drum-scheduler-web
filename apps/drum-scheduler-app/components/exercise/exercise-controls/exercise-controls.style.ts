@@ -6,6 +6,9 @@ export const theme = {
     border: '#D6D9DE',
     primary: '#3B82F6',
     primaryText: '#FFFFFF',
+    secondarySurface: '#EEF2F7',
+    secondaryBorder: '#E3E8F0',
+    secondaryText: '#3B82F6',
     shadow: 'rgba(0,0,0,0.12)',
   },
 };
@@ -41,6 +44,30 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.primary,
+  },
+  controlBtnSecondary: {
+    height: 35,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    gap: 2,
+    backgroundColor: theme.colors.secondarySurface,
+    borderWidth: 1,
+    borderColor: theme.colors.secondaryBorder,
+  },
+  controlBtnSecondaryText: {
+    color: theme.colors.secondaryText,
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.4,
+  },
+  controlBtnSecondaryIconLeft: {
+    marginLeft: -8,
+  },
+  controlBtnSecondaryIconRight: {
+    marginRight: -8,
   },
   controlBtnDisabled: {
     opacity: 0.45,

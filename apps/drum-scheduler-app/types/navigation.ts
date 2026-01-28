@@ -4,9 +4,8 @@ export type RootStackParamList = {
   Sessions: undefined;
   Session: { sessionId: number };
   Exercise: {
-    exercise: Exercise;
+    exercises: Exercise[];
     sessionName: string;
     exerciseIndex: number;
-    totalExercises: number;
   };
 };
