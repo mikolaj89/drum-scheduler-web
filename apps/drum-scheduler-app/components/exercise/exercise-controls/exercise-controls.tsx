@@ -81,7 +81,7 @@ export default function ExerciseControls({
           accessibilityLabel="Next"
           disabled={isNextDisabled}
         >
-          <Text style={styles.controlBtnSecondaryText}>NEXT</Text>
+          <Text  style={styles.controlBtnSecondaryText}>NEXT</Text>
           <Icon name="chevron-right" size={22} color={theme.colors.secondaryText} style={styles.controlBtnSecondaryIconRight} />
         </Pressable>
       </View>

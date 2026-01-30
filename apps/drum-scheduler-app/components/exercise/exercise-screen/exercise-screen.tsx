@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React from 'react';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import type { Exercise } from '@drum-scheduler/contracts';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useExercise } from '../../../hooks/use-exercise';
 import ActiveExerciseView from '../active-exercise-view/active-exercise-view';
 import ExerciseControls from '../exercise-controls/exercise-controls';
 import { styles, theme } from './exercise-screen.style';
+import { RootStackParamList } from '../../../types/navigation';
 export default function ExerciseScreen({
   exercises,
   sessionName,
@@ -28,7 +31,6 @@ export default function ExerciseScreen({
     timeFormatted,
     isPauseDisabled,
     isPlayDisabled,
-    isPrevNextDisabled,
     isPrevDisabled,
     isNextDisabled,
     handlePrev,
@@ -54,9 +56,7 @@ export default function ExerciseScreen({
             <View style={styles.header}>
               <Text style={styles.sessionName}>{sessionName}</Text>
               <View style={styles.titleRow}>
-                <Text style={styles.exerciseTitle}>
-                  {currentExercise.name}
-                </Text>
+                <Text style={styles.exerciseTitle}>{currentExercise.name}</Text>
                 <Text style={styles.exerciseProgress}>
                   Exercise {currentIndex} / {totalExercises}
                 </Text>
@@ -65,12 +65,16 @@ export default function ExerciseScreen({
 
             <View style={styles.card}>
               <Text style={styles.cardLabel}>Notes</Text>
-              <Text style={styles.cardValue}>{currentExercise.description}</Text>
+              <Text style={styles.cardValue}>
+                {currentExercise.description}
+              </Text>
 
               <View style={styles.row}>
                 <View style={styles.kv}>
                   <Text style={styles.kLabel}>Duration</Text>
-                  <Text style={styles.kValue}>{currentExercise.duration} min</Text>
+                  <Text style={styles.kValue}>
+                    {currentExercise.durationMinutes} min
+                  </Text>
                 </View>
                 <View style={styles.kv}>
                   <Text style={styles.kLabel}>BPM</Text>
@@ -82,16 +86,16 @@ export default function ExerciseScreen({
         )}
 
         <ExerciseControls
-          
           isPrevDisabled={isPrevDisabled}
           isNextDisabled={isNextDisabled}
           isPlayDisabled={isPlayDisabled}
           isPauseDisabled={isPauseDisabled}
           onPrev={handlePrev}
+          onNext={handleNext}
           onPlay={startExercise}
           onPause={pauseExercise}
           onFinish={finishExercise}
-          onNext={handleNext}
+          
         />
       </View>
     </SafeAreaView>

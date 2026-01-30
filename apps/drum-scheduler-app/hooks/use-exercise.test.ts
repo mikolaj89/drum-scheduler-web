@@ -22,15 +22,21 @@ const exercisesFixture: Exercise[] = [
     id: 2,
     name: 'Second Exercise',
     categoryId: null,
-    description: 'Second Description',
-    durationMinutes: 3,
-    bpm: 120,
+    description: null,
+    durationMinutes: null,
+    bpm: null,
     mp3Url: null,
     createdAt: '2024-01-02T00:00:00.000Z',
   },
 ];
 
 const mockUseTimer = useTimer as jest.MockedFunction<typeof useTimer>;
+const mockUseNavigation = jest.fn();
+
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual<object>('@react-navigation/native'),
+  useNavigation: () => mockUseNavigation(),
+}));
 
 describe('useExercise', () => {
   beforeEach(() => {
@@ -89,5 +95,38 @@ describe('useExercise', () => {
     });
 
     expect(result.current.mode).toBe('preview');
+  });
+
+  it('get correct current exercise and index', () => {
+    const { result } = renderHook(() =>
+      useExercise({ exercises: exercisesFixture, exerciseIndex: 2 }),
+    );
+
+    expect(result.current.currentExercise.id).toBe(2);
+    expect(result.current.currentExercise.description).toBe('—');
+    expect(result.current.currentExercise.name).toBe('Second Exercise');
+    expect(result.current.currentExercise.durationMinutes).toBe(0);
+    expect(result.current.currentExercise.bpm).toBe(0);
+    expect(result.current.currentIndex).toBe(2);
+  });
+
+  it('get correct disable states for controls', () => {
+    const { result } = renderHook(() =>
+      useExercise({ exercises: exercisesFixture, exerciseIndex: 1 }),
+    );
+
+    expect(result.current.isPlayDisabled).toBe(false);
+    expect(result.current.isPauseDisabled).toBe(true);
+    expect(result.current.isPrevDisabled).toBe(true);
+    expect(result.current.isNextDisabled).toBe(false);
+
+    act(() => {
+      result.current.startExercise();
+    });
+
+    expect(result.current.isPlayDisabled).toBe(true);
+    expect(result.current.isPauseDisabled).toBe(false);
+    expect(result.current.isPrevDisabled).toBe(true);
+    expect(result.current.isNextDisabled).toBe(true);
   });
 });

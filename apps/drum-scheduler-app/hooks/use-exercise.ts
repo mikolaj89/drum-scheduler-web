@@ -6,6 +6,10 @@ import { useMetronome } from './use-metronome';
 import { metronomeOptions } from './use-metronome.constants';
 import { Exercise } from '@drum-scheduler/contracts';
 import { getFormattedExercise } from '../components/exercise/exercise.utils';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
 
 type UseExercise = {
   exercises: Exercise[];
@@ -14,15 +18,27 @@ type UseExercise = {
 
 export const useExercise = ({ exercises, exerciseIndex }: UseExercise) => {
   const [currentIndex, setCurrentIndex] = useState(exerciseIndex);
+  console.log('Current Index:', currentIndex);
 
   const currentExercise = getFormattedExercise(exercises[currentIndex - 1]);
-  const duration = currentExercise?.duration ?? 0;
+  const durationSeconds = (currentExercise?.durationMinutes ?? 0) * 60; // in seconds
   const totalExercises = exercises.length;
+  console.log('Total Exercises:', totalExercises);
 
   const [mode, setMode] = useState<ExerciseState>('preview');
-  const metronome = useMetronome(metronomeOptions);
+  const metronome = useMetronome({...metronomeOptions,
+    bpm: currentExercise.bpm
+  });
+
+  const onTimerFinish = () => {
+   finishExercise();
+    handleNext();
+
+  }
   const { secondsLeft, startCountdown, stopCountdown, resetCountdown } =
-    useTimer(duration * 60);
+    useTimer(durationSeconds, onTimerFinish);
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
 
   const isPauseDisabled = mode !== 'active';
@@ -30,7 +46,7 @@ export const useExercise = ({ exercises, exerciseIndex }: UseExercise) => {
   const isPrevNextDisabled = mode !== 'preview';
 
   const isPrevDisabled = currentIndex === 1 || isPrevNextDisabled;
-  const isNextDisabled = currentIndex === totalExercises || isPrevNextDisabled;
+  const isNextDisabled = isPrevNextDisabled;
 
   const timeFormatted = getFormattedTime(secondsLeft);
 
@@ -48,15 +64,15 @@ export const useExercise = ({ exercises, exerciseIndex }: UseExercise) => {
 
   const finishExercise = () => {
     setMode('preview');
-    resetCountdown(duration * 60);
+    resetCountdown(durationSeconds);
     metronome.stop();
   };
 
   useEffect(() => {
     setMode('preview');
-    resetCountdown(duration * 60);
+    resetCountdown(durationSeconds);
     metronome.stop();
-  }, [duration]);
+  }, [durationSeconds]);
 
   const handlePrev = () => {
     if (isPrevNextDisabled) return;
@@ -65,6 +81,12 @@ export const useExercise = ({ exercises, exerciseIndex }: UseExercise) => {
 
   const handleNext = () => {
     if (isPrevNextDisabled) return;
+    if(currentIndex === totalExercises) {
+      Alert.alert('You finished all exercises!', 'Go back to sessions screen?', [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Go to sessions', onPress: () => navigation.navigate('Sessions') },
+          ]);
+    }
     setCurrentIndex(prev => Math.min(totalExercises, prev + 1));
   };
 
