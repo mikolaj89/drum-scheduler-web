@@ -5,7 +5,6 @@ import {
   StyleSheet,
   SafeAreaView,
   Pressable,
-  TextInput,
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
@@ -15,6 +14,7 @@ import { useSessionsQuery } from '@drum-scheduler/sdk';
 import { Session } from '@drum-scheduler/contracts';
 import { SessionCard } from '../session-card/session-card';
 import { TopBar } from '../../top-bar/top-bar';
+import { SearchBar } from '../../search-bar/search-bar';
 import { API_BASE_URL } from '../../../config/api';
 import { theme } from '../../../utils/theme';
 
@@ -43,7 +43,11 @@ export default function SessionsScreen({
     <SafeAreaView style={styles.safe}>
       <View style={styles.screen}>
         <TopBar onMenu={() => {}}>
-          <SearchBar value={query} onChange={setQuery} />
+          <SearchBar
+            value={query}
+            onChange={setQuery}
+            placeholder="Search sessions..."
+          />
         </TopBar>
 
         {sessionsResult?.isLoading ? (
@@ -76,77 +80,9 @@ export default function SessionsScreen({
   );
 }
 
-function SearchBar({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <View style={styles.searchWrap}>
-      <Icon name="search" size={22} color={theme.colors.textMuted} />
-      <TextInput
-        value={value}
-        onChangeText={onChange}
-        placeholder="Search sessions..."
-        placeholderTextColor={theme.colors.textMuted}
-        style={styles.searchInput}
-      />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.colors.bg },
   screen: { flex: 1, backgroundColor: theme.colors.bg },
-
-  searchWrap: {
-    paddingHorizontal: theme.spacing.md,
-    height: 46,
-    borderRadius: 999,
-    backgroundColor: theme.colors.surface,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.sm,
-    flex: 1,
-  },
-  searchInput: {
-    flex: 1,
-    color: theme.colors.text,
-    fontSize: theme.typography.body,
-  },
-
-  tabsOuter: {
-    marginTop: theme.spacing.md,
-    marginHorizontal: theme.spacing.lg,
-    padding: 4,
-    backgroundColor: theme.colors.pillBg,
-    borderRadius: 999,
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  tabBtn: {
-    flex: 1,
-    height: 38,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabBtnActive: {
-    backgroundColor: theme.colors.primary,
-  },
-  tabText: {
-    fontSize: theme.typography.body,
-    fontWeight: '600',
-    color: theme.colors.pillText,
-  },
-  tabTextActive: {
-    color: theme.colors.primaryText,
-  },
 
   listContent: {
     paddingHorizontal: theme.spacing.lg,

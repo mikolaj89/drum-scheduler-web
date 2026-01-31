@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   topBar: {
     marginTop: theme.spacing.xl,
     paddingHorizontal: theme.spacing.lg,
-    height: 56,
+    height: 45,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   iconBtn: {
-    width: 40,
+    width: 32,
     height: 40,
     borderRadius: 20,
     alignItems: 'center',
