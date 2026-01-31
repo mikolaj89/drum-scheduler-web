@@ -15,40 +15,7 @@ import { useSessionsQuery } from '@drum-scheduler/sdk';
 import { Session } from '@drum-scheduler/contracts';
 import { SessionCard } from '../session-card/session-card';
 import { API_BASE_URL } from '../../../config/api';
-
-const theme = {
-  colors: {
-    bg: '#F2F3F5',
-    surface: '#FFFFFF',
-    border: '#D6D9DE',
-    text: '#1F2430',
-    textMuted: '#6B7280',
-    icon: '#4B5563',
-    pillBg: '#E7E9ED',
-    pillText: '#374151',
-    primary: '#6B7280', // grayscale primary
-    primaryText: '#FFFFFF',
-    shadow: 'rgba(0,0,0,0.12)',
-  },
-  radius: {
-    xl: 18,
-    lg: 14,
-    md: 12,
-  },
-  spacing: {
-    xs: 6,
-    sm: 10,
-    md: 14,
-    lg: 18,
-    xl: 24,
-  },
-  typography: {
-    title: 22,
-    cardTitle: 18,
-    body: 14,
-    small: 12,
-  },
-};
+import { theme } from '../../../utils/theme';
 
 const TABS = ['All', 'Upcoming', 'Completed'] as const;
 type Tab = (typeof TABS)[number];
@@ -58,7 +25,6 @@ export default function SessionsScreen({
 }: {
   onOpenSession?: (sessionId: number) => void;
 }) {
-  const [tab, setTab] = useState<Tab>('All');
   const [query, setQuery] = useState('');
 
   const sessionsResult = useSessionsQuery(API_BASE_URL);
@@ -75,11 +41,7 @@ export default function SessionsScreen({
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.screen}>
-        <TopBar title="Sessions" onBack={() => {}} onMenu={() => {}} />
-
-        <SearchBar value={query} onChange={setQuery} />
-
-        <SegmentedTabs value={tab} onChange={setTab} />
+        <TopBar onMenu={() => {}} query={query} setQuery={setQuery} />
 
         {sessionsResult?.isLoading ? (
           <Text style={styles.sectionTitle}>Loading sessions…</Text>
@@ -112,25 +74,20 @@ export default function SessionsScreen({
 }
 
 function TopBar({
-  title,
-  onBack,
   onMenu,
+  query,
+  setQuery,
 }: {
-  title: string;
-  onBack: () => void;
   onMenu: () => void;
+  query: string;
+  setQuery: (v: string) => void;
 }) {
   return (
     <View style={styles.topBar}>
-      <Pressable style={styles.iconBtn} onPress={onBack}>
-        <Icon name="arrow-back" size={24} color={theme.colors.icon} />
-      </Pressable>
-
-      <Text style={styles.topBarTitle}>{title}</Text>
-
       <Pressable style={styles.iconBtn} onPress={onMenu}>
-        <Icon name="more-vert" size={24} color={theme.colors.icon} />
+        <Icon name="menu" size={24} color={theme.colors.icon} />
       </Pressable>
+      <SearchBar value={query} onChange={setQuery} />
     </View>
   );
 }
@@ -156,40 +113,13 @@ function SearchBar({
   );
 }
 
-function SegmentedTabs({
-  value,
-  onChange,
-}: {
-  value: Tab;
-  onChange: (t: Tab) => void;
-}) {
-  return (
-    <View style={styles.tabsOuter}>
-      {TABS.map(t => {
-        const active = t === value;
-        return (
-          <Pressable
-            key={t}
-            onPress={() => onChange(t)}
-            style={[styles.tabBtn, active && styles.tabBtnActive]}
-          >
-            <Text style={[styles.tabText, active && styles.tabTextActive]}>
-              {t}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.colors.bg },
   screen: { flex: 1, backgroundColor: theme.colors.bg },
 
   topBar: {
+    marginTop: theme.spacing.lg,
     height: 56,
-    paddingHorizontal: theme.spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -208,8 +138,6 @@ const styles = StyleSheet.create({
   },
 
   searchWrap: {
-    marginHorizontal: theme.spacing.lg,
-    marginTop: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     height: 46,
     borderRadius: 999,
@@ -219,6 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.sm,
+    flex: 1,
   },
   searchInput: {
     flex: 1,
