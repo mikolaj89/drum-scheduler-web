@@ -1,24 +1,19 @@
 import React from 'react';
-import {  View } from 'react-native';
-import { Appbar, Searchbar } from 'react-native-paper';
+import { View } from 'react-native';
+import { Searchbar } from 'react-native-paper';
+import { TopBar } from '../../top-bar/top-bar';
 import { styles } from './sessions-header.style';
 
 export function SessionsHeader({
   query,
   onChangeQuery,
-  onMenu,
 }: {
   query: string;
   onChangeQuery: (value: string) => void;
-  onMenu?: () => void;
 }) {
   return (
     <>
- 
-      <Appbar.Header statusBarHeight={0} mode="small"  elevated style={styles.appbar}>
-        <Appbar.Action  mode="contained" icon="menu" onPress={onMenu ?? (() => {})} />
-        <Appbar.Content  mode="small" title="Sessions" />
-      </Appbar.Header>
+      <TopBar title="Sessions" onMenu={() => {}} />
 
       <View style={styles.searchWrap}>
         <Searchbar
