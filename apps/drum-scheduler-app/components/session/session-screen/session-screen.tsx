@@ -2,10 +2,10 @@ import React from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
-  Pressable,
   Text,
   View,
 } from 'react-native';
+import { Button } from 'react-native-paper';
 import type { Exercise } from '@drum-scheduler/contracts';
 import { useSessionQuery } from '@drum-scheduler/sdk';
 import { TopBar } from '../../top-bar/top-bar';
@@ -58,7 +58,7 @@ export default function SessionScreen({
           </View>
         ) : null}
 
-        <Text style={styles.listTitle}>Exercises</Text>
+        <Text style={styles.listTitle}>Practice session plan</Text>
 
         <FlatList
           data={sessionResult.data?.exercises ?? []}
@@ -76,8 +76,9 @@ export default function SessionScreen({
         />
 
         <View style={styles.ctaWrap}>
-          <Pressable
-            style={styles.ctaBtn}
+          <Button
+            mode="contained"
+            
             onPress={() => {
               const firstExercise = sessionResult.data?.exercises?.[0];
               const sessionName = sessionResult.data?.name;
@@ -87,9 +88,10 @@ export default function SessionScreen({
               }
             }}
             disabled={!sessionResult.data?.exercises?.[0]}
+            
           >
-            <Text style={styles.ctaText}>Start</Text>
-          </Pressable>
+            Start Session
+          </Button>
         </View>
       </View>
     </ScreenContainer>
