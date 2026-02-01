@@ -26,7 +26,7 @@ export function SessionListItem({
       <TouchableRipple onPress={onPress}>
         <View style={styles.cardContent}>
           <View style={styles.cardRow}>
-            <Avatar.Icon size={36} icon="drum" style={styles.cardAvatar} />
+            <Avatar.Icon size={36} icon="account-music-outline" style={styles.cardAvatar} />
             <View style={styles.cardTextWrap}>
               <Text variant="titleMedium" style={styles.cardTitle}>
                 {session.name}

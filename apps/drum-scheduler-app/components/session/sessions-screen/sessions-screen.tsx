@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import {
-  View,
-  SafeAreaView,
-  FlatList,
-  ListRenderItemInfo,
-} from 'react-native';
-import { FAB } from 'react-native-paper';
+import { View, FlatList, ListRenderItemInfo } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSessionsQuery } from '@drum-scheduler/sdk';
 import { Session } from '@drum-scheduler/contracts';
 import { API_BASE_URL } from '../../../config/api';
@@ -32,7 +27,9 @@ export default function SessionsScreen({
       <View style={styles.screen}>
         <SessionsHeader query={query} onChangeQuery={setQuery} />
 
-        <SessionLoadingPlaceholder isLoading={Boolean(sessionsResult?.isLoading)} />
+        <SessionLoadingPlaceholder
+          isLoading={Boolean(sessionsResult?.isLoading)}
+        />
 
         <FlatList
           data={sessionsResult?.data ?? []}
@@ -41,8 +38,6 @@ export default function SessionsScreen({
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
         />
-
-        <FAB icon="plus" style={styles.fab} onPress={() => {}} />
       </View>
     </SafeAreaView>
   );

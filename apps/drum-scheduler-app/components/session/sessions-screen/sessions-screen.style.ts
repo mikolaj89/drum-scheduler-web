@@ -8,8 +8,7 @@ export const styles = StyleSheet.create({
   },
 
   listContent: {
-    paddingHorizontal: 16,
-    paddingTop: 6,
+    paddingHorizontal: 8,
     paddingBottom: 120,
   },
 

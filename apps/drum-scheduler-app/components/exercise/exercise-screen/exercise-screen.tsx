@@ -1,15 +1,13 @@
 import React from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Exercise } from '@drum-scheduler/contracts';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useExercise } from '../../../hooks/use-exercise';
 import ActiveExerciseView from '../active-exercise-view/active-exercise-view';
 import ExerciseControls from '../exercise-controls/exercise-controls';
 import { TopBar } from '../../top-bar/top-bar';
-import { styles, theme } from './exercise-screen.style';
-import { RootStackParamList } from '../../../types/navigation';
+import { styles } from './exercise-screen.style';
+
 export default function ExerciseScreen({
   exercises,
   sessionName,
@@ -29,14 +27,12 @@ export default function ExerciseScreen({
     finishExercise,
     mode,
     timeFormatted,
-    isPlayDisabled,
     isPrevDisabled,
     isNextDisabled,
     handlePrev,
     handleNext,
     currentExercise,
     currentIndex,
-    isPendingExercise
   } = useExercise({ exercises: exercises, exerciseIndex });
 
 

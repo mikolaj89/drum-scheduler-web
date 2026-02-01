@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import {  View } from 'react-native';
 import { Appbar, Searchbar } from 'react-native-paper';
 import { styles } from './sessions-header.style';
 
@@ -14,9 +14,10 @@ export function SessionsHeader({
 }) {
   return (
     <>
-      <Appbar.Header mode="small" elevated style={styles.appbar}>
-        <Appbar.Action icon="menu" onPress={onMenu ?? (() => {})} />
-        <Appbar.Content title="Sessions" />
+ 
+      <Appbar.Header statusBarHeight={0} mode="small"  elevated style={styles.appbar}>
+        <Appbar.Action  mode="contained" icon="menu" onPress={onMenu ?? (() => {})} />
+        <Appbar.Content  mode="small" title="Sessions" />
       </Appbar.Header>
 
       <View style={styles.searchWrap}>
