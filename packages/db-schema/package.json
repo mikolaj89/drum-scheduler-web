@@ -22,12 +22,15 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "db:pull": "drizzle-kit pull --config drizzle.config.cjs"
   },
   "peerDependencies": {
     "drizzle-orm": "^0.38.4"
   },
   "devDependencies": {
+    "@types/node": "^22.10.10",
+    "drizzle-kit": "0.30.2",
     "drizzle-orm": "^0.38.4",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.3"
