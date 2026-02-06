@@ -24,10 +24,11 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist"
   },
-  "dependencies": {
+  "peerDependencies": {
     "drizzle-orm": "^0.38.4"
   },
   "devDependencies": {
+    "drizzle-orm": "^0.38.4",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.3"
   }
