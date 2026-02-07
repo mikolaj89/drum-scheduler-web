@@ -1,5 +1,5 @@
 import { fetchData } from "./request";
-import { ApiClient as ApiClientV2 } from "../utils/api-client-v2";
+import { ApiClient as ApiClientV2 } from "@drum-scheduler/sdk";
 import type { Exercise, Session } from "@drum-scheduler/contracts";
 import { SessionFormData } from "@/components/Session/SessionForm/session-form-helper";
 

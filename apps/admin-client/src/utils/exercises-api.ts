@@ -2,7 +2,7 @@ import { fetchData } from "./request";
 import type { Category, Exercise } from "@drum-scheduler/contracts";
 import { ExerciseSubmitData } from "@/components/Exercise/ExerciseForm/exercise-form-helper";
 import { ApiClient } from "./api-client";
-import { ApiClient as ApiClientV2 } from "./api-client-v2";
+import { ApiClient as ApiClientV2 } from "@drum-scheduler/sdk";
 
 // this function have more logic - therefore maybe should be included in dedicated hook instead 🤷
 export const fetchCategories = async () => {
