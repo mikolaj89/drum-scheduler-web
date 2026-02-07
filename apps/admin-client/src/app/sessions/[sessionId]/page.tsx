@@ -1,26 +1,33 @@
-import { fetchSession } from "@/utils/sessions-api";
 import { SessionDetails } from "@/components/Session/SessionDetails";
 import { Box, Typography } from "@mui/material";
+import { fetchSessionById, SessionWithExercises } from "@drum-scheduler/sdk";
 
 type PageProps = {
   params: Promise<{
     sessionId: string;
   }>;
-}
+};
 
-export default async function Page({ params } : PageProps) {
+export default async function Page({ params }: PageProps) {
   const { sessionId } = await params;
-  const { data, error } = await fetchSession(sessionId as string);
-
+  let data: SessionWithExercises | null = null;
+  try {
+    data = await fetchSessionById("http://localhost:8000", 0);
+  } catch (error) {
+    return (
+      <Box>
+        Error: {error instanceof Error ? error.message : "Unknown error"}
+      </Box>
+    );
+  }
   if (data === null) {
-    return <Box>Error: {error?.message}</Box>;
+    return <Box>No session found</Box>;
   }
 
-  console.log({ data, error });
   return (
     <>
       <Typography variant="h1">{data.name}</Typography>
       <SessionDetails sessionData={data} />
     </>
-  )
+  );
 }

@@ -53,10 +53,16 @@ export function useSessionsQuery(baseUrl: string) {
   return result;
 }
 
-export function useSessionQuery(baseUrl: string, sessionId: number) {
+export function useSessionQuery(
+  baseUrl: string,
+  sessionId: number,
+  options?: { initialData?: SessionWithExercises; refetchOnMount?: boolean }
+) {
   const result = useQuery({
     queryKey: sessionsQueryKeys.byId(sessionId),
     queryFn: () => fetchSessionById(baseUrl, sessionId),
+    initialData: options?.initialData,
+    refetchOnMount: options?.refetchOnMount ?? true,
   });
 
   return result;

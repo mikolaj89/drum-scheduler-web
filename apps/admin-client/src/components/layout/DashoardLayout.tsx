@@ -6,16 +6,11 @@ import {
   Box,
   CssBaseline,
   Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  ThemeProvider,
+  IconButton, ThemeProvider,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 import theme from "./theme";
 import { NavBar } from "./NavBar";

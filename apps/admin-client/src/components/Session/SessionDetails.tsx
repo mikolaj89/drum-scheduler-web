@@ -1,10 +1,9 @@
 "use client";
 import {
-  fetchSession,
   removeExerciseFromSession,
-  reorderSessionExercises,
+  reorderSessionExercises
 } from "@/utils/sessions-api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Paper } from "@mui/material";
 import type { SessionWithExercises } from "@/utils/sessions-api";
 import ExercisesTable from "../Exercise/ExercisesTable/SessionExercisesTable";
@@ -15,6 +14,7 @@ import Divider from "@mui/material/Divider";
 import { SelectExerciseModal } from "./AddExerciseToSessionModal/AddExerciseToSessionModal";
 import type { Exercise } from "@drum-scheduler/contracts";
 import { ButtonsWrapper, TableButtonsWrapper } from "../Common/Container";
+import { useSessionQuery } from "@drum-scheduler/sdk";
 
 export const SessionDetails = ({
   sessionData,
@@ -25,15 +25,11 @@ export const SessionDetails = ({
   const [isOrderChanged, setIsOrderChanged] = useState(false);
   const queryClient = useQueryClient();
 
-  const {
-    data: { data },
-    isFetching,
-  } = useQuery({
-    queryKey: ["session", sessionData.id],
-    queryFn: ({ queryKey }) => fetchSession(queryKey[1].toString()),
-    initialData: { data: sessionData },
-    refetchOnMount: false,
-  });
+  const { data, isFetching } = useSessionQuery(
+    "http://localhost:8000",
+    sessionData.id,
+    { initialData: sessionData, refetchOnMount: false }
+  );
 
   const reorderMutation = useMutation({
     mutationKey: ["reorderSessionExercises"],

@@ -46,7 +46,8 @@ export const addExercisesToSession = async (
 ) => {
   const apiClient = new ApiClientV2("http://localhost:8000");
   return await apiClient.post<SessionWithExercises>(
-    `/sessions/${sessionId}/exercises/${exerciseId}`
+    `/sessions/${sessionId}/exercises/${exerciseId}`,
+    {}
   );
 };
 
