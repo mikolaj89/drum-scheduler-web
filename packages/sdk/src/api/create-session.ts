@@ -1,11 +1,10 @@
+import { Session, SessionInsert } from "@drum-scheduler/contracts";
 import { ApiClient } from "../api-client";
 import type { CreateSessionResponse } from "./session-types";
 
-export const createSession = async <
-  T extends { name: string; notes: string | null }
->(
+export const createSession = async (
   baseUrl: string,
-  session: T
+  session: SessionInsert
 ) => {
   const apiClient = new ApiClient(baseUrl);
   const result = await apiClient.post<CreateSessionResponse>(

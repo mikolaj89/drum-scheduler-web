@@ -19,11 +19,10 @@ export const SessionForm = () => {
   } = useForm({
     resolver: zodResolver(sessionSchema),
   });
-  const mutation = useCreateSession<SessionFormData>(API_BASE_URL);
-  const { data } = mutation;
+  const { error, mutate, isPending } = useCreateSession(API_BASE_URL);
 
   const onSubmit = (data: SessionFormData) => {
-    mutation.mutate(data, {
+    mutate(data, {
       onSuccess: (result) => {
         if ("data" in result) {
           push(`/sessions/${result.data?.id}`);
@@ -40,32 +39,30 @@ export const SessionForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
     >
-      {data && "error" in data && (
-        <FormError error>{data.error.message}</FormError>
-      )}
+      {error && <FormError error>{error.message}</FormError>}
 
       <TextField
         label="Name"
         {...register("name")}
         error={!!errors.name}
         helperText={errors.name?.message}
-        disabled={mutation.isPending}
+        disabled={isPending}
       />
       <TextField
         label="Notes"
         {...register("notes")}
         error={!!errors.notes}
         helperText={errors.notes?.message}
-        disabled={mutation.isPending}
+        disabled={isPending}
       />
       <Button
         type="submit"
         variant="contained"
         color="primary"
         size="large"
-        disabled={mutation.isPending}
+        disabled={isPending}
       >
-        {mutation.isPending ? <CircularProgress size={24} /> : "Add Exercise"}
+        {isPending ? <CircularProgress size={24} /> : "Add Exercise"}
       </Button>
     </form>
   );

@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createSession, sessionsQueryKeys } from "../api";
+import { SessionInsert } from "@drum-scheduler/contracts";
 
-export function useCreateSession<T extends { name: string; notes: string | null }>(
+export function useCreateSession(
   baseUrl: string
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (session: T) => createSession(baseUrl, session),
+    mutationFn: (session: SessionInsert) => createSession(baseUrl, session),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: sessionsQueryKeys.all,
