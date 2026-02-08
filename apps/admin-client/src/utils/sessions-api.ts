@@ -4,9 +4,6 @@ import type { Exercise, Session } from "@drum-scheduler/contracts";
 import { SessionFormData } from "@/components/Session/SessionForm/session-form-helper";
 
 export type CreateSessionResponse = { id: number };
-export type SessionExercisesOrderInput = {
-  exercises: Exercise[];
-};
 
 export type SessionWithExercises = Session & {
   totalDuration: number;
@@ -28,17 +25,6 @@ export const deleteSession = async (id: number) => {
   const apiClient = new ApiClientV2("http://localhost:8000");
   return await apiClient.delete<null>(`/sessions/${id}`);
 }
-
-export const reorderSessionExercises = async (
-  sessionId: number,
-  exercises: SessionExercisesOrderInput
-) => {
-  const apiClient = new ApiClientV2("http://localhost:8000");
-  return await apiClient.patch<null>(
-    `/sessions/${sessionId}/exercises-order`,
-    exercises
-  );
-};
 
 export const addExercisesToSession = async (
   sessionId: number,

@@ -1,7 +1,6 @@
 "use client";
 import {
   removeExerciseFromSession,
-  reorderSessionExercises
 } from "@/utils/sessions-api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Paper } from "@mui/material";
@@ -14,7 +13,7 @@ import Divider from "@mui/material/Divider";
 import { SelectExerciseModal } from "./AddExerciseToSessionModal/AddExerciseToSessionModal";
 import type { Exercise } from "@drum-scheduler/contracts";
 import { ButtonsWrapper, TableButtonsWrapper } from "../Common/Container";
-import { useSessionQuery } from "@drum-scheduler/sdk";
+import { useSessionQuery, useReorderSessionExercises } from "@drum-scheduler/sdk";
 
 export const SessionDetails = ({
   sessionData,
@@ -31,29 +30,10 @@ export const SessionDetails = ({
     { initialData: sessionData, refetchOnMount: false }
   );
 
-  const reorderMutation = useMutation({
-    mutationKey: ["reorderSessionExercises"],
-    mutationFn: async ({
-      sessionId,
-      exercises,
-    }: {
-      sessionId: number;
-      exercises: Exercise[];
-    }) => {
-      const result = await reorderSessionExercises(sessionId, {
-        exercises,
-      });
-      if ("error" in result) {
-        throw new Error(result.error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["session", sessionData.id],
-      });
-      setIsOrderChanged(false);
-    }
-  });
+  const reorderMutation = useReorderSessionExercises(
+    "http://localhost:8000",
+    sessionData.id
+  );
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["deleteSession", sessionData.id],
@@ -87,11 +67,11 @@ export const SessionDetails = ({
   }, [data?.exercises]);
 
   const onSaveOrder = () => {
-    reorderMutation.mutate({
-      sessionId: sessionData.id,
-      exercises: rows,
+    reorderMutation.mutate(rows, {
+      onSuccess: () => {
+        setIsOrderChanged(false);
+      },
     });
-    
   };
 
   const onDelete = (exerciseId: number) => {

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Exercise,
   Session
@@ -8,6 +8,7 @@ import { ApiClient } from "./api-client";
 export const sessionsQueryKeys = {
   all: ["sessions"] as const,
   byId: (sessionId: number) => ["sessions", sessionId] as const,
+  reorderExercises: (sessionId: number) => ["sessions", sessionId, "reorder"] as const,
 };
 
 export type SessionWithExercises = Session & {
@@ -66,4 +67,44 @@ export function useSessionQuery(
   });
 
   return result;
+}
+
+export type SessionExercisesOrderInput = {
+  exercises: Exercise[];
+};
+
+export const reorderSessionExercises = async (
+  baseUrl: string,
+  sessionId: number,
+  exercises: SessionExercisesOrderInput
+) => {
+  const apiClient = new ApiClient(baseUrl);
+  const result = await apiClient.patch<null>(
+    `/sessions/${sessionId}/exercises-order`,
+    exercises
+  );
+  
+  if ("error" in result) {
+    throw new Error(result.error.message);
+  }
+  
+  return result.data;
+};
+
+export function useReorderSessionExercises(
+  baseUrl: string,
+  sessionId: number
+) {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationKey: sessionsQueryKeys.reorderExercises(sessionId),
+    mutationFn: (exercises: Exercise[]) => 
+      reorderSessionExercises(baseUrl, sessionId, { exercises }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: sessionsQueryKeys.byId(sessionId),
+      });
+    },
+  });
 }
