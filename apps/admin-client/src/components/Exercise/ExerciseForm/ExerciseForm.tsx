@@ -3,9 +3,8 @@
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { TextField, Button, CircularProgress } from "@mui/material";
-import { createExercise, fetchCategories } from "@/utils/exercises-api";
 import { SelectField } from "../../Common/Field/Select";
 import {
   exerciseSchema,
@@ -13,8 +12,10 @@ import {
   getCategoryOpts,
   getExerciseSubmitFormat,
 } from "./exercise-form-helper";
+import { useCategoriesQuery, useCreateExercise } from "@drum-scheduler/sdk";
 
 export const ExerciseForm = () => {
+  const API_BASE_URL = "http://localhost:8000";
   const {
     register,
     handleSubmit,
@@ -26,26 +27,17 @@ export const ExerciseForm = () => {
   });
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: async (data: ExerciseFormData) => {
-      const response = await createExercise(getExerciseSubmitFormat(data));
-      if (response.error) {
-        throw new Error(response.error.message);
-      }
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] }); // Refetch exercises list
-      reset();
-    },
-  });
+  const mutation = useCreateExercise<ExerciseFormData>(API_BASE_URL);
 
-  const categoriesData = useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
-  }).data;
+  const categoriesData = useCategoriesQuery(API_BASE_URL).data;
 
-  const onSubmit = (data: ExerciseFormData) => mutation.mutate(data);
+  const onSubmit = (data: ExerciseFormData) => {
+    mutation.mutate(getExerciseSubmitFormat(data), {
+      onSuccess: () => {
+        reset();
+      },
+    });
+  };
 
   return (
     <form

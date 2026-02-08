@@ -1,5 +1,4 @@
 import { ExercisesTable } from "@/components/Exercise/ExercisesTable/ExercisesTable";
-import { fetchCategories, fetchExercises } from "@/utils/exercises-api";
 import { ResponseData } from "@/utils/request";
 import { Typography } from "@mui/material";
 import {
@@ -13,12 +12,14 @@ import { ExerciseFilters } from "@/components/Exercise/ExercisesTable/ExerciseFi
 import {
   TableButtonsWrapper,
 } from "@/components/Common/Container";
+import { fetchCategories, fetchExercises } from "@drum-scheduler/sdk";
 
 type PageProps = {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function ExercisesPage({ searchParams }: PageProps) {
+  const API_BASE_URL = "http://localhost:8000";
   // Step 1: Create a new query client
   const queryClient = new QueryClient();
   let categories: Category[] = [];
@@ -36,10 +37,10 @@ export default async function ExercisesPage({ searchParams }: PageProps) {
 
   await queryClient.prefetchQuery({
     queryKey: ["exercises", name, categoryId],
-    queryFn: () =>  fetchExercises({ name, categoryId }),
+    queryFn: () => fetchExercises(API_BASE_URL, { name, categoryId }),
   });
   try {
-    categories = (await fetchCategories()) ?? []; // probably no need to prefetch or store in react-query cache
+    categories = (await fetchCategories(API_BASE_URL)) ?? []; // probably no need to prefetch or store in react-query cache
   } catch (error) {
     console.error("Error fetching categories:", error);
   }

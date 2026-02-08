@@ -1,8 +1,7 @@
 import { SelectOption } from "@/components/Common/Field/Select";
 import type { Category, Exercise } from "@drum-scheduler/contracts";
 import { z } from "zod";
-import { fetchExercise } from "@/utils/exercises-api";
-import { useQuery } from "@tanstack/react-query";
+import { useExerciseQuery as useExerciseQuerySDK } from "@drum-scheduler/sdk";
 
 // react-query keys
 export const EDITED_EXERCISE_ID_KEY = "editedExerciseId";
@@ -97,9 +96,10 @@ export const getExerciseFormDataFormat = (exercise: Exercise): ExerciseFormData 
 };
 
 export const useExerciseQuery = (editedId: number | null) => {
-  return useQuery({
-    queryKey: ["exercise", editedId],
-    queryFn: ({ queryKey }) =>
-      typeof queryKey[1] === "number" ? fetchExercise(queryKey[1]) : null,
-  });
+  const API_BASE_URL = "http://localhost:8000";
+  return useExerciseQuerySDK(
+    API_BASE_URL,
+    editedId ?? 0,
+    { enabled: !!editedId }
+  );
 };

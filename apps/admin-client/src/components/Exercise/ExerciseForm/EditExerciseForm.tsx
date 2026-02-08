@@ -2,13 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { TextField, Button, CircularProgress, Box, Skeleton } from "@mui/material";
-import {
-  editExercise,
-  fetchCategories,
-  fetchExercise,
-} from "@/utils/exercises-api";
 import { SelectField } from "../../Common/Field/Select";
 import {
   exerciseSchema,
@@ -19,6 +14,7 @@ import {
 } from "./exercise-form-helper";
 import { FormError } from "@/components/Common/Typography";
 import { useEffect, useMemo } from "react";
+import { useCategoriesQuery, useExerciseQuery, useUpdateExercise } from "@drum-scheduler/sdk";
 
 type ExerciseFormProps = {
   handleClose: () => void;
@@ -26,17 +22,17 @@ type ExerciseFormProps = {
 };
 
 export const EditExerciseForm = ({ handleClose, exerciseId }: ExerciseFormProps) => {
+  const API_BASE_URL = "http://localhost:8000";
   const queryClient = useQueryClient();
 
   // Use the directly passed ID to get the exercise data
-  const { data, isLoading: isFetching } = useQuery({
-    queryKey: ["exercise", exerciseId],
-    queryFn: () => fetchExercise(exerciseId),
-    // Will be enabled since exerciseId is guaranteed to exist
-  });
+  const { data, isLoading: isFetching } = useExerciseQuery(
+    API_BASE_URL,
+    exerciseId
+  );
 
   const initialValues = useMemo(() => {
-    return data?.data ? getExerciseFormDataFormat(data?.data) : undefined;
+    return data ? getExerciseFormDataFormat(data) : undefined;
   }, [data]);
   
   const {
@@ -57,30 +53,21 @@ export const EditExerciseForm = ({ handleClose, exerciseId }: ExerciseFormProps)
     }
   }, [initialValues, reset]);
 
-  const editMutation = useMutation({
-    mutationFn: async (data: ExerciseFormData) => {
-      const response = await editExercise(getExerciseSubmitFormat(data), exerciseId);
+  const editMutation = useUpdateExercise<ExerciseFormData>(
+    API_BASE_URL,
+    exerciseId
+  );
 
-      if (response.error) {
-        throw new Error(response.error.message);
-      }
-      return response;
-    },
-    onSuccess: () => {
-      // More precise invalidation
-      queryClient.invalidateQueries({ queryKey: ["exercise", exerciseId] });
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      reset();
-      handleClose();
-    },
-  });
+  const { data: categoriesData } = useCategoriesQuery(API_BASE_URL);
 
-  const { data: categoriesData } = useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
-  });
-
-  const onEditSubmit = (data: ExerciseFormData) => editMutation.mutate(data);
+  const onEditSubmit = (data: ExerciseFormData) => {
+    editMutation.mutate(getExerciseSubmitFormat(data), {
+      onSuccess: () => {
+        reset();
+        handleClose();
+      },
+    });
+  };
 
   if (isFetching) {
     return (

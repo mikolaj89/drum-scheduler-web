@@ -8,8 +8,7 @@ import {
   getExerciseFormDataFormat,
   useExerciseQuery,
 } from "./ExerciseForm/exercise-form-helper";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchExercise } from "@/utils/exercises-api";
+import { useQueryClient } from "@tanstack/react-query";
 import { EditExerciseForm } from "./ExerciseForm/EditExerciseForm";
 import { useForm } from "react-hook-form";
 

@@ -7,8 +7,7 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchCategories } from "@/utils/exercises-api";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { FormError } from "../../Common/Typography";
 import { SelectField } from "../../Common/Field/Select";
@@ -20,6 +19,7 @@ import {
   useAddExerciseToSession,
   useCategoryExercisesQuery,
 } from "./add-exercise-to-session-modal-helper";
+import { useCategoriesQuery } from "@drum-scheduler/sdk";
 
 const style = {
   position: "absolute",
@@ -68,10 +68,8 @@ export const SelectExerciseModal = ({
   };
 
   // queries and mutations
-  const categoriesQuery = useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
-  });
+  const API_BASE_URL = "http://localhost:8000";
+  const categoriesQuery = useCategoriesQuery(API_BASE_URL);
   const categoryExercisesQuery = useCategoryExercisesQuery(categoryId);
   const addExerciseMutation = useAddExerciseToSession(
     sessionId,

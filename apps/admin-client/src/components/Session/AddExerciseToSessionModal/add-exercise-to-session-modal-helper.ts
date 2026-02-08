@@ -1,6 +1,4 @@
-import { fetchCategoryExercises } from "@/utils/exercises-api";
-import { useQuery } from "@tanstack/react-query";
-import { useAddExerciseToSession as useAddExerciseToSessionSDK } from "@drum-scheduler/sdk";
+import { useAddExerciseToSession as useAddExerciseToSessionSDK, useCategoryExercisesQuery as useCategoryExercisesQuerySDK } from "@drum-scheduler/sdk";
 
 export const useAddExerciseToSession = (
   sessionId: number,
@@ -23,23 +21,11 @@ export const useAddExerciseToSession = (
   };
 };
 
-export const useCategoryExercisesQuery = (categoryId: string) =>
-  useQuery({
-    queryKey: ["categoryExercises", categoryId],
-    queryFn: async () => {
-      if (!categoryId) {
-        return [];
-      }
-      const result = await fetchCategoryExercises(categoryId);
-
-      if ("error" in result) {
-        throw new Error(result.error.message);
-      }
-      if (!result.data) {
-        throw new Error("No data found");
-      }
-      return result.data;
-    },
-    enabled: !!categoryId,
-    retry: false,
-  });
+export const useCategoryExercisesQuery = (categoryId: string) => {
+  const API_BASE_URL = "http://localhost:8000";
+  return useCategoryExercisesQuerySDK(
+    API_BASE_URL,
+    categoryId,
+    { enabled: !!categoryId }
+  );
+};

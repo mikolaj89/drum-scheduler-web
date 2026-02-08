@@ -1,19 +1,16 @@
 "use client";
-import {
-  deleteExercise,
-  fetchExercise,
-  fetchExercises,
-} from "@/utils/exercises-api";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { getExercisesColumns } from "./ExercisesTableHelper";
 import { Button, Skeleton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { EditExerciseModal } from "../EditExerciseModal";
 import { ConfirmationDialog } from "@/components/Common/ConfirmationDialog";
 import { useSearchParams } from "next/navigation";
+import { useExercisesQuery, useDeleteExercise, useExerciseQuery } from "@drum-scheduler/sdk";
 
 export const ExercisesTable = () => {
+  const API_BASE_URL = "http://localhost:8000";
   const queryClient = useQueryClient();
   const [isMounted, setIsMounted] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -29,24 +26,13 @@ export const ExercisesTable = () => {
   const name = searchParams.get("name") || "";
   const categoryId = searchParams.get("categoryId") || "";
 
-  const { data: queryData, isFetching } = useQuery({
-    queryKey: ["exercises", name, categoryId],
-    queryFn: () => fetchExercises({ name, categoryId }),
-    refetchOnMount: false,
-  });
-  const { data } = queryData ?? {};
+  const { data, isFetching } = useExercisesQuery(
+    API_BASE_URL,
+    { name, categoryId },
+    { refetchOnMount: false }
+  );
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const result = await deleteExercise(id);
-      if (result.error) {
-        throw new Error(result.error.message);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-    },
-  });
+  const deleteMutation = useDeleteExercise(API_BASE_URL);
 
   const onDeleteBtnClick = (id: number) => {
     setDeletedExerciseId(id);
@@ -54,19 +40,26 @@ export const ExercisesTable = () => {
   };
 
   const onDeleteConfirm = () => {
-    deletedExerciseId && deleteMutation.mutate(deletedExerciseId);
-    setDeletedExerciseId(null);
-    setIsConfirmModalOpen(false);
+    if (deletedExerciseId) {
+      deleteMutation.mutate(deletedExerciseId, {
+        onSuccess: () => {
+          setDeletedExerciseId(null);
+          setIsConfirmModalOpen(false);
+        },
+      });
+    }
   };
 
   const onEditBtnClick = (id: number) => {
     setEditingExerciseId(id);
     setIsEditModalOpen(true);
 
-    // Optionally prefetch the data (still a good practice)
+    // Prefetch using SDK
     queryClient.prefetchQuery({
-      queryKey: ["exercise", id],
-      queryFn: () => fetchExercise(id),
+      queryKey: ["exercises", id],
+      queryFn: () => import("@drum-scheduler/sdk").then(sdk => 
+        sdk.fetchExercise(API_BASE_URL, id)
+      ),
     });
   };
 
