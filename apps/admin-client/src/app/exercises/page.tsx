@@ -4,6 +4,7 @@ import { CreateExercise } from "@/components/Exercise/CreateExercise";
 import { ExerciseFilters } from "@/components/Exercise/ExercisesTable/ExerciseFilters";
 import { TableButtonsWrapper } from "@/components/Common/Container";
 import { fetchCategories, fetchExercises } from "@drum-scheduler/sdk";
+import { buildExercisesQueryParams } from "@/utils/query-params";
 import { Suspense } from "react";
 import Loading from "./loading";
 
@@ -30,10 +31,11 @@ async function ExercisesData({
   name: string;
   categoryId: string;
 }) {
-  const exercises = await fetchExercises("http://localhost:8000", {
-    name,
-    categoryId,
+  const queryString = buildExercisesQueryParams({
+    name: name || null,
+    categoryId: categoryId || null,
   });
+  const exercises = await fetchExercises("http://localhost:8000", queryString);
   return <ExercisesTable initialData={exercises ?? []} filters={{ name, categoryId }} />;
 }
 

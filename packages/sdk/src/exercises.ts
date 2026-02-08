@@ -88,19 +88,7 @@ export function useExerciseQuery(
   });
 }
 
-export const fetchExercises = async (
-  baseUrl: string,
-  filters: { name: string | null; categoryId: string | null }
-) => {
-  const params = new URLSearchParams();
-  if (filters.name) {
-    params.set("name", filters.name);
-  }
-  if (filters.categoryId) {
-    params.set("categoryId", filters.categoryId);
-  }
-  const queryString = params.toString() ? `?${params.toString()}` : "";
-  
+export const fetchExercises = async (baseUrl: string, queryString = "") => {
   const apiClient = new ApiClient(baseUrl);
   const result = await apiClient.get<Exercise[]>(`/exercises${queryString}`);
   
@@ -110,19 +98,6 @@ export const fetchExercises = async (
   
   return result.data;
 };
-
-export function useExercisesQuery(
-  baseUrl: string,
-  filters: { name: string | null; categoryId: string | null },
-  options?: { refetchOnMount?: boolean; initialData?: Exercise[] | null }
-) {
-  return useQuery({
-    queryKey: exercisesQueryKeys.filtered(filters),
-    queryFn: () => fetchExercises(baseUrl, filters),
-    refetchOnMount: options?.initialData ? false : (options?.refetchOnMount ?? true),
-    initialData: options?.initialData ?? undefined,
-  });
-}
 
 export const createExercise = async (
   baseUrl: string,

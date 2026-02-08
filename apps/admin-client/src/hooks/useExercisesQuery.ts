@@ -28,7 +28,7 @@ export const useExercisesQuery = (
 
   return useQuery({
     queryKey: ["exercises", queryString],
-    queryFn: () => fetchExercises(baseUrl, normalizedFilters),
+    queryFn: () => fetchExercises(baseUrl, queryString),
     refetchOnMount: options?.initialData ? false : options?.refetchOnMount ?? true,
     initialData: options?.initialData ?? undefined,
   });
