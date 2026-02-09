@@ -1,15 +1,6 @@
-import React from 'react';
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
-
-const mockSession = {
-  id: 123,
-  name: "Test Session",
-  notes: null,
-  totalDuration: 42,
-  exercises: [],
-};
+import { baseUrl, createTestQueryClient, createWrapper, mockSession } from "./test-utils";
 
 const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
   const url = typeof input === "string" ? input : input.toString();
@@ -36,18 +27,11 @@ describe("useSessionQuery", () => {
   it("returns mocked session data", async () => {
     vi.stubGlobal("fetch", fetchMock);
     const { useSessionQuery } = await import("../use-session-query");
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-      },
-    });
-
-    const wrapper = ({ children }: { children?: any }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
+    const queryClient = createTestQueryClient();
+    const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () => useSessionQuery("http://localhost:8000", 123),
+      () => useSessionQuery(baseUrl, 123),
       { wrapper }
     );
 
@@ -56,7 +40,7 @@ describe("useSessionQuery", () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8000/sessions/123",
+      `${baseUrl}/sessions/123`,
       expect.any(Object)
     );
   });
@@ -64,18 +48,11 @@ describe("useSessionQuery", () => {
   it("returns error when api responds with error", async () => {
     vi.stubGlobal("fetch", fetchMock);
     const { useSessionQuery } = await import("../use-session-query");
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-      },
-    });
-
-    const wrapper = ({ children }: { children?: any }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
+    const queryClient = createTestQueryClient();
+    const wrapper = createWrapper(queryClient);
 
     const { result } = renderHook(
-      () => useSessionQuery("http://localhost:8000", 999),
+      () => useSessionQuery(baseUrl, 999),
       { wrapper }
     );
 
@@ -86,7 +63,7 @@ describe("useSessionQuery", () => {
     expect(result.current.error).toBeInstanceOf(Error);
     expect((result.current.error as Error).message).toBe("Not found");
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8000/sessions/999",
+      `${baseUrl}/sessions/999`,
       expect.any(Object)
     );
   });
