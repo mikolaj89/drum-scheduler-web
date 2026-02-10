@@ -6,6 +6,7 @@ import {
   usersSchema,
   sessionsSchema,
   sessionexercisesSchema,
+  authSessionsSchema,
 } from "./schema";
 import { categoriesRelations, exercisesRelations } from "./relations";
 import { tryReadFile } from "../utils/try-read-file";
@@ -47,6 +48,7 @@ export const db = drizzle(pool, {
     usersSchema,
     sessionexercisesSchema,
     sessionsSchema,
+    authSessionsSchema,
   },
 });
 

@@ -1,10 +1,9 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 import {
   categories,
   exercises,
   sessionexercises,
   sessions,
+  users
 } from "@drum-scheduler/db-schema";
 
 export type CategoryRow = typeof categories.$inferSelect;
@@ -15,20 +14,8 @@ export type SessionRow = typeof sessions.$inferSelect;
 export type SessionInsert = typeof sessions.$inferInsert;
 export type SessionExerciseRow = typeof sessionexercises.$inferSelect;
 export type SessionExerciseInsert = typeof sessionexercises.$inferInsert;
-
-export const CategoryRowSchema: z.ZodType<CategoryRow> = createSelectSchema(categories) as z.ZodType<CategoryRow>;
-export const CategoryInsertSchema: z.AnyZodObject = createInsertSchema(categories);
-
-export const ExerciseRowSchema: z.ZodType<ExerciseRow> = createSelectSchema(exercises) as z.ZodType<ExerciseRow>;
-export const ExerciseInsertSchema: z.AnyZodObject = createInsertSchema(exercises);
-
-export const SessionRowSchema: z.ZodType<SessionRow> = createSelectSchema(sessions) as z.ZodType<SessionRow>;
-export const SessionInsertSchema: z.AnyZodObject = createInsertSchema(sessions);
-
-export const SessionExerciseRowSchema: z.ZodType<SessionExerciseRow> =
-  createSelectSchema(sessionexercises) as z.ZodType<SessionExerciseRow>;
-export const SessionExerciseInsertSchema: z.AnyZodObject =
-  createInsertSchema(sessionexercises);
+export type UserRow = typeof users.$inferSelect;
+export type UserInsert = typeof users.$inferInsert;
 
 // Common “narrowed” DTOs: keep shape stable for clients.
 // You can evolve these independently from DB concerns (e.g. omit createdAt, hide internal fields).
@@ -36,8 +23,4 @@ export type Category = CategoryRow;
 export type Exercise = ExerciseRow;
 export type Session = SessionRow;
 export type SessionExercise = SessionExerciseRow;
-
-export const CategorySchema = CategoryRowSchema;
-export const ExerciseSchema = ExerciseRowSchema;
-export const SessionSchema = SessionRowSchema;
-export const SessionExerciseSchema = SessionExerciseRowSchema;
+export type User = UserRow;

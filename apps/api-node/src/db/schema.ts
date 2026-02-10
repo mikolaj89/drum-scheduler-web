@@ -4,6 +4,7 @@ import {
   users,
   sessions,
   sessionexercises,
+  authSessions,
 } from "../drizzle/schema";
 
 export {
@@ -12,4 +13,5 @@ export {
   users as usersSchema,
   sessions as sessionsSchema,
   sessionexercises as sessionexercisesSchema,
+  authSessions as authSessionsSchema,
 };
