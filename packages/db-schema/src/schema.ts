@@ -61,11 +61,11 @@ export const users = pgTable("users", {
 
 export const authSessions = pgTable("auth_sessions", {
 	id: uuid().primaryKey().notNull(),
-	userId: uuid("user_id"),
+	userId: uuid("user_id").notNull(),
 	accountId: uuid("account_id"),
 	refreshTokenHash: text("refresh_token_hash"),
-	createdAt: timestamp("created_at", { mode: 'string' }),
-	expiresAt: timestamp("expires_at", { mode: 'string' }),
+	createdAt: timestamp("created_at", { mode: 'string' }).notNull(),
+	expiresAt: timestamp("expires_at", { mode: 'string' }).notNull(),
 	revokedAt: timestamp("revoked_at", { mode: 'string' }),
 	replacedBySessionId: uuid("replaced_by_session_id"),
 	userAgent: text("user_agent"),

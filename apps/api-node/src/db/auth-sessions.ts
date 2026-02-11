@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { eq } from "drizzle-orm";
 import { db } from "./drizzle";
 import { authSessionsSchema } from "./schema";
 
@@ -27,4 +28,21 @@ export async function createAuthSession(params: {
     userAgent,
     ip,
   }).returning();
+}
+
+export async function getAuthSessionByRefreshHash(refreshTokenHash: string) {
+  return await db
+    .select()
+    .from(authSessionsSchema)
+    .where(eq(authSessionsSchema.refreshTokenHash, refreshTokenHash))
+    .limit(1);
+}
+
+export async function revokeAuthSession(sessionId: string, replacedBySessionId: string | null = null) {
+  const revokedAtValue = new Date().toISOString();
+
+  return await db
+    .update(authSessionsSchema)
+    .set({ revokedAt: revokedAtValue, replacedBySessionId })
+    .where(eq(authSessionsSchema.id, sessionId));
 }

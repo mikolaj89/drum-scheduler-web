@@ -9,3 +9,11 @@ export async function getUserByEmail(email: string) {
     .where(eq(usersSchema.email, email))
     .limit(1);
 }
+
+export async function getUserById(id: string) {
+  return await db
+    .select()
+    .from(usersSchema)
+    .where(eq(usersSchema.id, id))
+    .limit(1);
+}
