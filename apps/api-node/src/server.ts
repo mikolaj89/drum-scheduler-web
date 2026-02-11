@@ -32,6 +32,7 @@ fastify.addHook("onRequest", async (request) => {
 
 await fastify.register(cors, {
   origin: "http://localhost:3000",
+  credentials: true,
 });
 
 fastify.get("/health", async () => ({ ok: true }));

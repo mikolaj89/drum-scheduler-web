@@ -51,6 +51,7 @@ export class ApiClient {
         method,
         headers: { ...this.headers, ...customHeaders },
         body: body ? JSON.stringify(body) : undefined,
+        credentials: "include",
       });
 
       const responseData = await this.parseJsonSafe<ApiResponse<T>>(response);
