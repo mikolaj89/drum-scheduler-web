@@ -9,6 +9,7 @@ export const ACCESS_TOKEN = "access-token";
 export const ROLE_ADMIN = "ADMIN";
 export const ROLE_UNKNOWN = "UNKNOWN";
 export const PASSWORD_HASH = "hash";
+export const EMAIL = "test@example.com";
 
 export const futureDate = () => new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
@@ -28,6 +29,7 @@ export const validSession = () => ({
 export const validUser = (overrides?: Partial<{
   id: string;
   accountId: string | null;
+  email: string | null;
   role: string | null;
   isActive: boolean;
   passwordHash: string | null;
@@ -35,6 +37,7 @@ export const validUser = (overrides?: Partial<{
 }>) => ({
   id: USER_ID,
   accountId: ACCOUNT_ID,
+  email: EMAIL,
   role: ROLE_ADMIN,
   isActive: true,
   passwordHash: PASSWORD_HASH,
