@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@drum-scheduler/config':
+        specifier: workspace:^
+        version: link:packages/config
       '@drum-scheduler/contracts':
         specifier: workspace:^
         version: link:packages/contracts
@@ -39,6 +42,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.0.0)
+      '@drum-scheduler/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@drum-scheduler/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
@@ -127,6 +133,9 @@ importers:
 
   apps/api-node:
     dependencies:
+      '@drum-scheduler/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@drum-scheduler/db-schema':
         specifier: workspace:*
         version: link:../../packages/db-schema
@@ -179,6 +188,9 @@ importers:
 
   apps/drum-scheduler-app:
     dependencies:
+      '@drum-scheduler/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@drum-scheduler/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
@@ -290,6 +302,15 @@ importers:
         version: 19.2.0(react@19.2.0)
       typescript:
         specifier: ^5.8.3
+        version: 5.9.3
+
+  packages/config:
+    devDependencies:
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      typescript:
+        specifier: ^5.9.3
         version: 5.9.3
 
   packages/contracts:

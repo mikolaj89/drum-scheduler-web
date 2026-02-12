@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@drum-scheduler/contracts": "workspace:^",
-    "@drum-scheduler/sdk": "workspace:^"
+    "@drum-scheduler/sdk": "workspace:^",
+    "@drum-scheduler/config": "workspace:^"
   }
 }

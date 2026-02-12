@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { ReactQueryProvider } from "../../providers/ReactQueryProvider";
 import theme from "@/components/layout/theme";
-import { LEGAL_NAME, PRODUCT_NAME } from "@/config/branding";
+import { BRANDING } from "@drum-scheduler/config";
 import {
   AppBar,
   Box,
@@ -22,7 +22,7 @@ export default function LoginLayout({ children }: PropsWithChildren) {
           <AppBar position="static">
             <Toolbar>
               <Typography variant="h6" noWrap>
-                {PRODUCT_NAME}
+                {BRANDING.appName}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -40,7 +40,7 @@ export default function LoginLayout({ children }: PropsWithChildren) {
           </Box>
           <Box component="footer" sx={{ py: 2, textAlign: "center" }}>
             <Typography variant="body2" color="text.secondary">
-              {LEGAL_NAME}
+              {BRANDING.legalName}
             </Typography>
           </Box>
         </Box>

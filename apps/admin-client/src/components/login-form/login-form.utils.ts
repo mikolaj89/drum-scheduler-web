@@ -1,5 +1,6 @@
-import { MIN_PASSWORD_LENGTH } from "@/config/globals";
+
 import { z } from "zod";
+import { MIN_PASSWORD_LENGTH } from "@drum-scheduler/config";
 
 export const LoginFormSchema = z.object({
   email: z
