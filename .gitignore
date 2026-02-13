@@ -1,5 +1,5 @@
 .env
-apps/api-node/local.env
+apps/api/local.env
 node_modules/
 dist/
 

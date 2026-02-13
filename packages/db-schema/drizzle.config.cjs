@@ -33,14 +33,14 @@ const getDbUrl = () => {
   const fromRuntime = process.env.DB_URL;
   if (fromRuntime) return fromRuntime;
 
-  const fromApiNode = readLocalEnv("../../apps/api-node/local.env").DB_URL;
-  if (fromApiNode) return fromApiNode;
-
   const fromApi = readLocalEnv("../../apps/api/local.env").DB_URL;
   if (fromApi) return fromApi;
 
+  const fromApiNodeLegacy = readLocalEnv("../../apps/api-node/local.env").DB_URL;
+  if (fromApiNodeLegacy) return fromApiNodeLegacy;
+
   throw new Error(
-    "DB_URL is missing. Define it in apps/api-node/local.env or apps/api/local.env (DB_URL=...) or export DB_URL in the environment."
+    "DB_URL is missing. Define it in apps/api/local.env or apps/api-node/local.env (DB_URL=...) or export DB_URL in the environment."
   );
 };
 
