@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { deleteSessionExercise as deleteSessionExerciseDb } from "../../db/sessionExercises";
+import { deleteSessionExercise as deleteSessionExerciseDb } from "../../db/session-exercises";
 import { getFormattedErrorBody } from "../../utils/response";
 
 type Params = { sessionid?: string; exerciseid?: string };

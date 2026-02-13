@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
-import { getCategories } from "./categories/getCategories";
-import { getCategoryExercises } from "./categories/getCategoryExercises";
-import { deleteCategory } from "./categories/deleteCategory";
+import { getCategories } from "./categories/get-categories";
+import { getCategoryExercises } from "./categories/get-category-exercises";
+import { deleteCategory } from "./categories/delete-category";
 
 export default async function categoriesRoutes(fastify: FastifyInstance) {
   fastify.get("/categories", getCategories);

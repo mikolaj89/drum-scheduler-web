@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
-import { createSession } from "./sessions/createSession";
-import { getSessions } from "./sessions/getSessions";
-import { getSessionById } from "./sessions/getSessionById";
-import { deleteSession } from "./sessions/deleteSession";
+import { createSession } from "./sessions/create-session";
+import { getSessions } from "./sessions/get-sessions";
+import { getSessionById } from "./sessions/get-session-by-id";
+import { deleteSession } from "./sessions/delete-session";
 
 export default async function sessionsRoutes(fastify: FastifyInstance) {
   fastify.get("/sessions", getSessions);

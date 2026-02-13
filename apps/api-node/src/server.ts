@@ -6,7 +6,7 @@ import { loadEnv } from "./config/env";
 import { authConfig } from "./config/auth";
 import exercisesRoutes from "./routes/exercises";
 import sessionsRoutes from "./routes/sessions";
-import sessionExercisesRoutes from "./routes/sessionExercises";
+import sessionExercisesRoutes from "./routes/session-exercises";
 import categoriesRoutes from "./routes/categories";
 import authRoutes from "./routes/auth";
 

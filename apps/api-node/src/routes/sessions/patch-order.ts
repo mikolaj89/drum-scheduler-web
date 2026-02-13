@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { SessionExercisesOrderInput } from "../../api-types";
-import { reorderSessionExercises } from "../../db/sessionExercises";
+import { reorderSessionExercises } from "../../db/session-exercises";
 import { getFormattedErrorBody } from "../../utils/response";
 
 type Params = { id?: string };

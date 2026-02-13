@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
-import { patchOrderHandler } from "./sessions/patchOrder";
-import { getSessionExercises } from "./sessions/getSessionExercises";
-import { addSessionExercise } from "./sessions/addSessionExercise";
-import { deleteSessionExercise } from "./sessions/deleteSessionExercise";
+import { patchOrderHandler } from "./sessions/patch-order";
+import { getSessionExercises } from "./sessions/get-session-exercises";
+import { addSessionExercise } from "./sessions/add-session-exercise";
+import { deleteSessionExercise } from "./sessions/delete-session-exercise";
 
 export default async function sessionExercisesRoutes(fastify: FastifyInstance) {
   fastify.get("/sessions/:id/exercises", getSessionExercises);

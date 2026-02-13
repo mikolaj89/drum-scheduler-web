@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { getSession as getSessionDb } from "../../db/sessions";
-import { getSessionExercises as getSessionExercisesDb } from "../../db/sessionExercises";
+import { getSessionExercises as getSessionExercisesDb } from "../../db/session-exercises";
 import { getFormattedErrorBody } from "../../utils/response";
 import { getFormattedSession } from "../../utils/session";
 

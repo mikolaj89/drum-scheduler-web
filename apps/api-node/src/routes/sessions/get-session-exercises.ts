@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { getSessionExercises as getSessionExercisesDb } from "../../db/sessionExercises";
+import { getSessionExercises as getSessionExercisesDb } from "../../db/session-exercises";
 import { getFormattedErrorBody } from "../../utils/response";
 
 type Params = { id?: string };
