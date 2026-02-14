@@ -31,3 +31,6 @@ The project exists to streamline drum practice by:
 ## Build all workspaces
 - Build packages + apps (and typecheck apps): pnpm build:all
 
+## Run tests
+- Run all applicable workspace tests via Turbo: pnpm test
+
